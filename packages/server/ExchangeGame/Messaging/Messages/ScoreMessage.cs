@@ -7,8 +7,8 @@
             Payload = new ScoreMessagePayload
             {
                 Score = score,
-                Exchange = exchange.Id,
-                Attendee = attendee.Id,
+                Exchange = exchange?.Id,
+                Attendee = attendee?.Id,
             };
         }
     }
@@ -17,8 +17,8 @@
     {
         public int Score { get; set; }
 
-        public int Exchange { get; set; }
+        public int? Exchange { get; set; }
 
-        public int Attendee { get; set; }
+        public int? Attendee { get; set; }
     }
 }

@@ -7,12 +7,12 @@ namespace ExchangeGame
     public class Exchange: GameObject
     {
         private List<Call> _calls = new List<Call>();
-        private Action<int> _updateScore;
+        private Action<int, Exchange, Attendee> _updateScore;
         
         // TODO make configurable
         private const int FAILED_CONNECTION_SCORE = 5;
 
-        public Exchange(string displayName, Action<int> updateScore): base(displayName)
+        public Exchange(string displayName, Action<int, Exchange, Attendee> updateScore): base(displayName)
         {
             _updateScore = updateScore;
            _logger.LogInformation($"Exchange {DisplayName} is in the game");
@@ -34,7 +34,7 @@ namespace ExchangeGame
         private void OnCallTimeout(Call call)
         {
             _calls.Remove(call);
-            _updateScore(call.Score);
+            _updateScore(call.Score, null, null);
         }
 
         public bool Connect(Attendee attendee)
@@ -51,7 +51,7 @@ namespace ExchangeGame
 
             if (!sucess)
             {
-                _updateScore(FAILED_CONNECTION_SCORE);
+                _updateScore(FAILED_CONNECTION_SCORE, this, attendee);
             }
 
             return sucess;

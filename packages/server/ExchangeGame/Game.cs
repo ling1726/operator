@@ -100,9 +100,11 @@ namespace ExchangeGame
             return exchanges[idx];
         }
 
-        private void OnUpdateScore(int scoreToUpdate)
+        private void OnUpdateScore(int scoreToUpdate, Exchange exchange, Attendee attendee)
         {
             Score += scoreToUpdate;
+            var message = new ScoreMessage(exchange, attendee, Score);
+            BroadcastMessage(JsonHelpers.SerializeMessage(message));
         }
 
         private Call MatchCall(Player player = null)
