@@ -16,7 +16,7 @@ namespace ExchangeGame
 
         public Dictionary<string, Player> PlayersByIp { get; } = new Dictionary<string, Player>();
 
-        public Dictionary<int, Attendee> Attendees { get; set; }
+        public Dictionary<int, Attendee> Attendees { get; set; } = new Dictionary<int, Attendee>();
 
         public int Score { get; private set; } = 0;
 
@@ -48,8 +48,13 @@ namespace ExchangeGame
             var newPlayer = new Player(name);
             Players.Add(newPlayer.Id, newPlayer);
             PlayersByIp.Add(ipPort, newPlayer);
-            _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
             newPlayer.SendMessage = messageStr => server.SendAsync(ipPort, messageStr);
+
+            _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
+            foreach (var attendee in newPlayer.Attendees)
+            {
+                Attendees.Add(attendee.Id, attendee);
+            }
 
             var message = new LobbyMessage(Players.Values);
             BroadcastMessage(JsonHelpers.SerializeMessage(message));
@@ -62,8 +67,7 @@ namespace ExchangeGame
             player.Ready = true;
             if (Players.Values.Count > 1 && Players.Values.All(x => x.Ready))
             {
-                var message = new StartMessage(Exchanges.Values, player.Attendees);
-                BroadcastMessage(JsonHelpers.SerializeMessage(message));
+                Start();
                 SendinitialCalls();
             }
         }
@@ -73,6 +77,15 @@ namespace ExchangeGame
             var exchange = Exchanges[exchangeId];
             var attendee = Attendees[attendeeId];
             exchange.Connect(attendee);
+        }
+
+        private void Start()
+        {
+            foreach (var player in Players.Values)
+            {
+                var message = new StartMessage(Exchanges.Values, player.Attendees);
+                player.SendMessage(JsonHelpers.SerializeMessage(message));
+            }
         }
 
         private void SendinitialCalls()

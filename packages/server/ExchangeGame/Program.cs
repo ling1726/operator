@@ -1,6 +1,7 @@
 ﻿using ExchangeGame.Messaging;
 using ExchangeGame.Messaging.Handlers;
 using System;
+using System.Collections.Concurrent;
 using System.Text;
 using WatsonWebsocket;
 
@@ -10,7 +11,8 @@ namespace ExchangeGame
     {
         private static string _Hostname = "localhost";
         private static int _Port = 8080;
-        private static string _ClientIpPort = null;
+
+        private static ConcurrentQueue<(string messageStr, string ipPort)> messageQueue = new ConcurrentQueue<(string messageStr, string ipPort)>();
 
         static void Main(string[] args)
         {
@@ -26,11 +28,9 @@ namespace ExchangeGame
                 wss.ClientDisconnected += (s, e) => Console.WriteLine("Client disconnected: " + e.IpPort);
                 wss.MessageReceived += (s, e) =>
                 {
-                    Console.WriteLine("Server message received from " + e.IpPort + ": " + Encoding.UTF8.GetString(e.Data));
                     var jsonString = Encoding.UTF8.GetString(e.Data);
-                    var message = JsonHelpers.DeserializeMessage(jsonString);
-                    handler.HandleMessage(message, e.IpPort);
-                    _ClientIpPort = e.IpPort;
+                    Console.WriteLine("Server message received from " + e.IpPort + ": " + jsonString);
+                    messageQueue.Enqueue((jsonString, e.IpPort));
                 };
 
                 game.server = wss;
@@ -38,7 +38,11 @@ namespace ExchangeGame
 
                 while(true)
                 {
-
+                    if (!messageQueue.IsEmpty && messageQueue.TryDequeue(out var entry))
+                    {
+                        var message = JsonHelpers.DeserializeMessage(entry.messageStr);
+                        handler.HandleMessage(message, entry.ipPort);
+                    }
                 }
             }
         }

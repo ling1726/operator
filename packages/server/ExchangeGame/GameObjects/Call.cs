@@ -64,7 +64,8 @@ namespace ExchangeGame
 
             DateTimeOffset now = (DateTimeOffset)DateTime.UtcNow;
             StartTimestamp = now.ToUnixTimeMilliseconds() + Convert.ToInt64(START_DELAY);
-            _timer.Start();
+            // TODO reenable this
+            // _timer.Start();
         }
 
         public bool TryConnect(Attendee attendee)
