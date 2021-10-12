@@ -135,9 +135,8 @@ namespace ExchangeGame
 
         private Call MatchCall(Player player = null)
         {
-            var selectedPlayers = Players.Values.OrderBy(x => _random.Next()).Take(2).ToList();
-            var senderPlayer = player ?? selectedPlayers[0];
-            var recipientPlayer = selectedPlayers[1];
+            var senderPlayer = player ?? Players.Values.OrderBy(x => _random.Next()).Take(1).First();
+            var recipientPlayer = Players.Values.Where(x => x != senderPlayer).OrderBy(x => _random.Next()).Take(1).First();
 
             var sender = _availableAttendees[senderPlayer].ElementAt(_random.Next(0, _availableAttendees[senderPlayer].Count));
             var recipient = _availableAttendees[recipientPlayer].ElementAt(_random.Next(0, _availableAttendees[recipientPlayer].Count));
