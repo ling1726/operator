@@ -13,5 +13,7 @@ namespace ExchangeGame.Messaging.Messages
         public static string Ready = "Ready";
 
         public static string Mission = "Mission";
+
+        public static string Lobby = "Lobby";
     }
 }

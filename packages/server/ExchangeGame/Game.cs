@@ -1,4 +1,5 @@
 ﻿using ExchangeGame.Messaging;
+using ExchangeGame.Messaging.Messages;
 using ExchangeGame.Repositories;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,9 @@ namespace ExchangeGame
             PlayersByIp.Add(ipPort, newPlayer);
             _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
             newPlayer.SendMessage = messageStr => server.SendAsync(ipPort, messageStr);
+
+            var message = new LobbyMessage(Players.Values);
+            BroadcastMessage(JsonHelpers.SerializeMessage(message));
             
             return newPlayer;
         }
