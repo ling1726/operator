@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExchangeGame.Messaging.Messages
 {
-    public class LaunchMessage: Message<LaunchMessagePayload>
+    public class LaunchMessage: Message<ConnectionMessagePayload>
     {
         public LaunchMessage(): base("Launch")
         {
@@ -14,7 +14,7 @@ namespace ExchangeGame.Messaging.Messages
         }
     }
 
-    public class LaunchMessagePayload
+    public class ConnectionMessagePayload
     {
         public string Username { get; set; }
 

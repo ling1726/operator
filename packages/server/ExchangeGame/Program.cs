@@ -16,7 +16,9 @@ namespace ExchangeGame
         {
             var game = new Game();
             var handler = new LaunchMessageHandler(game);
-            handler.RegisterMessageHandler(new ReadyMessageHandler(game));
+            handler
+                .RegisterMessageHandler(new ReadyMessageHandler(game))
+                .RegisterMessageHandler(new ConnectMessageHandler(game));
 
             using (var wss = new WatsonWsServer(_Hostname, _Port, false))
             {

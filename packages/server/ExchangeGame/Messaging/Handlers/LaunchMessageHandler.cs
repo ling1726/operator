@@ -15,9 +15,9 @@ namespace ExchangeGame.Messaging.Handlers
 
         protected override void HandleMessagePayload(MessageWrapper wrapper, string ipPort)
         {
-            var payload = JsonHelpers.DeserializeMessagePayload<LaunchMessagePayload>(wrapper);
+            var payload = JsonHelpers.DeserializeMessagePayload<ConnectionMessagePayload>(wrapper);
 
-            Game.AddPlayer(() => { }, payload.Username, ipPort);
+            Game.AddPlayer(payload.Username, ipPort);
         }
     }
 }

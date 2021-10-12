@@ -16,6 +16,8 @@ namespace ExchangeGame
 
         public Dictionary<string, Player> PlayersByIp { get; } = new Dictionary<string, Player>();
 
+        public Dictionary<int, Attendee> Attendees { get; set; }
+
         public int Score { get; private set; } = 0;
 
         public WatsonWsServer server { get; set; }
@@ -41,7 +43,7 @@ namespace ExchangeGame
             }
         }
 
-        public Player AddPlayer(Action send, string name = "Test player", string ipPort = "")
+        public Player AddPlayer(string name = "Test player", string ipPort = "")
         {
             var newPlayer = new Player(name);
             Players.Add(newPlayer.Id, newPlayer);
@@ -64,6 +66,13 @@ namespace ExchangeGame
                 BroadcastMessage(JsonHelpers.SerializeMessage(message));
                 SendinitialCalls();
             }
+        }
+
+        public void Connect(int exchangeId, int attendeeId)
+        {
+            var exchange = Exchanges[exchangeId];
+            var attendee = Attendees[attendeeId];
+            exchange.Connect(attendee);
         }
 
         private void SendinitialCalls()
