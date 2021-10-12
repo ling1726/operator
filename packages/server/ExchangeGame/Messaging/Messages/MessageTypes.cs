@@ -8,10 +8,14 @@ namespace ExchangeGame.Messaging.Messages
 {
     public static class MessageTypes
     {
-        public static string Launch = "Launch";
+        public static string Launch = "Register";
 
         public static string Ready = "Ready";
 
         public static string Mission = "Mission";
+
+        public static string Lobby = "Lobby";
+
+        public static string Connection = "Connect";
     }
 }

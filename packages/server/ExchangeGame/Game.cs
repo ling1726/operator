@@ -1,4 +1,5 @@
 ﻿using ExchangeGame.Messaging;
+using ExchangeGame.Messaging.Messages;
 using ExchangeGame.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace ExchangeGame
         public Dictionary<int, Exchange> Exchanges { get; } = new Dictionary<int, Exchange>();
 
         public Dictionary<string, Player> PlayersByIp { get; } = new Dictionary<string, Player>();
+
+        public Dictionary<int, Attendee> Attendees { get; set; }
 
         public int Score { get; private set; } = 0;
 
@@ -40,13 +43,16 @@ namespace ExchangeGame
             }
         }
 
-        public Player AddPlayer(Action send, string name = "Test player", string ipPort = "")
+        public Player AddPlayer(string name = "Test player", string ipPort = "")
         {
             var newPlayer = new Player(name);
             Players.Add(newPlayer.Id, newPlayer);
             PlayersByIp.Add(ipPort, newPlayer);
             _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
             newPlayer.SendMessage = messageStr => server.SendAsync(ipPort, messageStr);
+
+            var message = new LobbyMessage(Players.Values);
+            BroadcastMessage(JsonHelpers.SerializeMessage(message));
             
             return newPlayer;
         }
@@ -54,12 +60,19 @@ namespace ExchangeGame
         public void PlayerReady(Player player)
         {
             player.Ready = true;
-            if (Players.Values.All(x => x.Ready))
+            if (Players.Values.Count > 1 && Players.Values.All(x => x.Ready))
             {
                 var message = new StartMessage(Exchanges.Values, player.Attendees);
                 BroadcastMessage(JsonHelpers.SerializeMessage(message));
                 SendinitialCalls();
             }
+        }
+
+        public void Connect(int exchangeId, int attendeeId)
+        {
+            var exchange = Exchanges[exchangeId];
+            var attendee = Attendees[attendeeId];
+            exchange.Connect(attendee);
         }
 
         private void SendinitialCalls()
