@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExchangeGame.Messaging;
+using ExchangeGame.Messaging.Handlers;
+using System;
 using System.Text;
 using WatsonWebsocket;
 
@@ -13,7 +15,7 @@ namespace ExchangeGame
         static void Main(string[] args)
         {
             var game = new Game();
-            // game.Start();
+            var handler = new LaunchMessageHandler(game);
 
             using (var wss = new WatsonWsServer(_Hostname, _Port, false))
             {
@@ -22,9 +24,13 @@ namespace ExchangeGame
                 wss.MessageReceived += (s, e) =>
                 {
                     Console.WriteLine("Server message received from " + e.IpPort + ": " + Encoding.UTF8.GetString(e.Data));
+                    var jsonString = Encoding.UTF8.GetString(e.Data);
+                    var message = JsonHelpers.DeserializeMessage(jsonString);
+                    handler.HandleMessage(message, e.IpPort);
                     _ClientIpPort = e.IpPort;
                 };
 
+                game.server = wss;
                 wss.Start();
 
                 while(true)

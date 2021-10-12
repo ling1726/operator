@@ -12,8 +12,4 @@
     <PackageReference Include="WatsonWebsocket" Version="2.3.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Messaging\" />
-  </ItemGroup>
-
 </Project>

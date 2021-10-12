@@ -1,7 +1,9 @@
-﻿using ExchangeGame.Repositories;
+﻿using ExchangeGame.Messaging;
+using ExchangeGame.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WatsonWebsocket;
 
 namespace ExchangeGame
 {
@@ -13,6 +15,8 @@ namespace ExchangeGame
 
         public int Score { get; private set; } = 0;
 
+        public WatsonWsServer server { get; set; }
+
         private Random _random = new Random();
 
         private Dictionary<Player, HashSet<Attendee>> _availableAttendees = new Dictionary<Player, HashSet<Attendee>>();
@@ -23,20 +27,8 @@ namespace ExchangeGame
         // TODO make this configurable
         private const int EXCHANGE_COUNT = 3;
 
-        // TODO make this configurable
-        private const int PLAYER_ATTENDEE_COUNT = 5;
-
-        // TODO remove this when integrated with client
-        private const int PLAYER_COUNT = 3;
-
         public Game()
         {
-
-            for(var i = 0; i < PLAYER_COUNT; i++)
-            {
-                var newPlayer = new Player($"Player {i}");
-                Players.Add(newPlayer.Id, newPlayer);
-            }
 
             var exchangeNames = ContentRepository.GetExchangeNames(EXCHANGE_COUNT);
             foreach(var exchangeName in exchangeNames)
@@ -44,33 +36,20 @@ namespace ExchangeGame
                 var newExchange = new Exchange(exchangeName, OnUpdateScore);
                 Exchanges.Add(newExchange.Id, newExchange);
             }
-
-            foreach(var player in Players.Values)
-            {
-                _availableAttendees[player] = player.Attendees.ToHashSet();
-            }
         }
 
-        // TODO get reid of this once transport layer is done
-        public void Start()
+        public Player AddPlayer(Action send, string name = "Test player", string ipPort = "")
         {
-            Console.WriteLine($"Game started, score: {Score}");
+            var newPlayer = new Player(name);
+            Players.Add(newPlayer.Id, newPlayer);
+            _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
+            newPlayer.SendMessage = messageStr => server.SendAsync(ipPort, messageStr);
 
-            foreach (var player in Players.Values)
-            {
-                var call = MatchCall();
-                var exchange = GetRandomExchange();
-                exchange.AddCall(call);
-                player.AddCall(call);
-                call.OnComplete += OnCallDisposed;
-                call.OnTimeout += OnCallDisposed;
-            }
-
-            while(true)
-            {
-               // Main loop
-            }
+            var message = new StartMessage(Exchanges.Values, newPlayer.Attendees);
+            newPlayer.SendMessage(JsonHelpers.SerializeMessage(message));
+            return newPlayer;
         }
+
 
         private Exchange GetRandomExchange()
         {

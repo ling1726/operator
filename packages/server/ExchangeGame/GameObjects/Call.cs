@@ -17,6 +17,8 @@ namespace ExchangeGame
 
         public Attendee Recipient { get; private set; }
 
+        public int Duration { get; private set; }
+
         private bool _senderConnected = false;
 
         private bool _recipientConnected = false;
@@ -32,28 +34,26 @@ namespace ExchangeGame
 
         private Timer _timer;
 
-        private int _durationMs;
-
         public Call(string displayName, Attendee sender, Attendee recipient): base(displayName)
         {
             Sender = sender;
             Recipient = recipient;
             var rand = new Random();
             // TODO configure this
-            _durationMs = rand.Next(5000, 10000);
+            Duration = rand.Next(5000, 10000);
 
             sender.InCall = true;
             recipient.InCall = true;
 
 
             SetTimer();
-            _logger.LogInformation($"Call {displayName} between {Sender.DisplayName} and {Recipient.DisplayName}, duration {_durationMs}");
+            _logger.LogInformation($"Call {displayName} between {Sender.DisplayName} and {Recipient.DisplayName}, duration {Duration}");
         }
 
         private void SetTimer()
         {
            
-            _timer = new Timer(_durationMs);
+            _timer = new Timer(Duration);
             _timer.Elapsed += (Object source, ElapsedEventArgs e) =>
             {
                 _timer.Stop();
