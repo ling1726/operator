@@ -54,7 +54,7 @@ namespace ExchangeGame
         public void PlayerReady(Player player)
         {
             player.Ready = true;
-            if (Players.Values.All(x => x.Ready))
+            if (Players.Values.Count > 1 && Players.Values.All(x => x.Ready))
             {
                 var message = new StartMessage(Exchanges.Values, player.Attendees);
                 BroadcastMessage(JsonHelpers.SerializeMessage(message));
