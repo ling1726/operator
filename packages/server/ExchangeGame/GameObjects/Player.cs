@@ -18,9 +18,11 @@ namespace ExchangeGame
 
         public Action<string> SendMessage { get; set; }
 
+        public bool Ready { get; set; }
+
         public Player(string displayName, Action<string> sendMessage = null) : base(displayName)
         {
-            _logger.LogInformation($"Player {DisplayName} is in the game");
+            _logger.LogInformation($"Player {DisplayName} {Id} is in the game");
             Attendees = ContentRepository.GetAttendees(5, this);
             Calls = new List<Call>();
 
@@ -38,7 +40,7 @@ namespace ExchangeGame
         private void OnCallComplete(Call call)
         {
             Calls.Remove(call);
-            _logger.LogInformation($"Player {DisplayName} removing call {call.DisplayName}");
+            _logger.LogInformation($"Player {DisplayName} {Id} removing call {call.DisplayName}");
         }
     }
 }

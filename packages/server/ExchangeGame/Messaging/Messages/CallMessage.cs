@@ -1,9 +1,11 @@
-﻿namespace ExchangeGame.Messaging
+﻿using ExchangeGame.Messaging.Messages;
+
+namespace ExchangeGame.Messaging
 {
     public class CallMessage: Message<CallMessagePayload>
     {
 
-        public CallMessage(Call call, Exchange exchange): base("Mission")
+        public CallMessage(Call call, Exchange exchange): base(MessageTypes.Mission)
         {
             Payload = new CallMessagePayload
             {
@@ -13,6 +15,7 @@
                 DisplayName = call.DisplayName,
                 Duration = call.Duration,
                 Exchange = exchange.Id,
+                Timestamp = call.StartTimestamp,
             };
         }
     }

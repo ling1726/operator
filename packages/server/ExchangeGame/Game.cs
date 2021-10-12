@@ -13,6 +13,8 @@ namespace ExchangeGame
 
         public Dictionary<int, Exchange> Exchanges { get; } = new Dictionary<int, Exchange>();
 
+        public Dictionary<string, Player> PlayersByIp { get; } = new Dictionary<string, Player>();
+
         public int Score { get; private set; } = 0;
 
         public WatsonWsServer server { get; set; }
@@ -42,12 +44,52 @@ namespace ExchangeGame
         {
             var newPlayer = new Player(name);
             Players.Add(newPlayer.Id, newPlayer);
+            PlayersByIp.Add(ipPort, newPlayer);
             _availableAttendees[newPlayer] = newPlayer.Attendees.ToHashSet();
             newPlayer.SendMessage = messageStr => server.SendAsync(ipPort, messageStr);
-
-            var message = new StartMessage(Exchanges.Values, newPlayer.Attendees);
-            newPlayer.SendMessage(JsonHelpers.SerializeMessage(message));
+            
             return newPlayer;
+        }
+
+        public void PlayerReady(Player player)
+        {
+            player.Ready = true;
+            if (Players.Values.All(x => x.Ready))
+            {
+                var message = new StartMessage(Exchanges.Values, player.Attendees);
+                BroadcastMessage(JsonHelpers.SerializeMessage(message));
+                SendinitialCalls();
+            }
+        }
+
+        private void SendinitialCalls()
+        {
+            var messages = new List<string>();
+            foreach(var player in Players.Values)
+            {
+                CreateCall(player);
+            }
+        }
+
+        private void CreateCall(Player player)
+        {
+            var call = MatchCall(player);
+            var exchange = GetRandomExchange();
+            exchange.AddCall(call);
+            player.AddCall(call);
+            call.OnComplete += OnCallDisposed;
+            call.OnTimeout += OnCallDisposed;
+            var message = new CallMessage(call, exchange);
+            player.SendMessage(JsonHelpers.SerializeMessage(message));
+            Console.WriteLine($"Creating new call for ${call.Sender.Player.DisplayName}{call.Sender.Player.Id}");
+        }
+
+        private void BroadcastMessage(string message)
+        {
+            foreach(var player in Players.Values)
+            {
+                player.SendMessage(message);
+            }
         }
 
 
@@ -83,13 +125,7 @@ namespace ExchangeGame
             _availableAttendees[call.Sender.Player].Add(call.Sender);
             _availableAttendees[call.Recipient.Player].Add(call.Recipient);
 
-            var newCall = MatchCall();
-            var exchange = GetRandomExchange();
-            exchange.AddCall(newCall);
-            call.Sender.Player.AddCall(newCall);
-            newCall.OnComplete += OnCallDisposed;
-            newCall.OnTimeout += OnCallDisposed;
-            Console.WriteLine($"Creating new call for ${call.Sender.Player.DisplayName}");
+            CreateCall(call.Sender.Player);
         }
     }
 }

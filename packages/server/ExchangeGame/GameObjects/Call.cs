@@ -1,9 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace ExchangeGame
@@ -19,6 +15,8 @@ namespace ExchangeGame
 
         public int Duration { get; private set; }
 
+        public long StartTimestamp { get; private set; }
+
         private bool _senderConnected = false;
 
         private bool _recipientConnected = false;
@@ -29,6 +27,8 @@ namespace ExchangeGame
 
         // TODO configure this
         public int Score { get; set; }
+
+        private const int START_DELAY = 500;
 
         private bool CallComplete { get { return _senderConnected && _recipientConnected; } }
 
@@ -52,8 +52,7 @@ namespace ExchangeGame
 
         private void SetTimer()
         {
-           
-            _timer = new Timer(Duration);
+            _timer = new Timer(Duration + START_DELAY);
             _timer.Elapsed += (Object source, ElapsedEventArgs e) =>
             {
                 _timer.Stop();
@@ -62,6 +61,9 @@ namespace ExchangeGame
                 OnTimeout(this);
                 _logger.LogInformation($"Call {DisplayName} has elapsed");
             };
+
+            DateTimeOffset now = (DateTimeOffset)DateTime.UtcNow;
+            StartTimestamp = now.ToUnixTimeMilliseconds() + Convert.ToInt64(START_DELAY);
             _timer.Start();
         }
 

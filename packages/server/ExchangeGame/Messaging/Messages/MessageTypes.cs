@@ -9,5 +9,9 @@ namespace ExchangeGame.Messaging.Messages
     public static class MessageTypes
     {
         public static string Launch = "Launch";
+
+        public static string Ready = "Ready";
+
+        public static string Mission = "Mission";
     }
 }
