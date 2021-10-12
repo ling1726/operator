@@ -1,29 +1,35 @@
 import * as React from "react";
-import { makeStyles } from "@fluentui/react-components";
-import { LaunchForm } from "../components/LaunchForm";
-
-const useStyles = makeStyles({
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+import { LaunchForm, LaunchFormData } from "../components/LaunchForm";
+import { Center } from "../components/Center";
+import { useCreateWebSocket, useWebSocket } from "../hooks/useWebSocket";
 
 export function Landing() {
-  const styles = useStyles();
+  const createWS = useCreateWebSocket();
+  const [, { state, send }] = useWebSocket();
+
+  const [data, setData] = React.useState<LaunchFormData>();
+
+  React.useEffect(() => {
+    if (state === "OPEN" && data) {
+      send({ type: "REGISTER", payload: data });
+    }
+  }, [state, data]);
 
   const handleSubmit = React.useCallback(
-    (ev: React.FormEvent<HTMLFormElement>) => {
+    async (ev: React.FormEvent<HTMLFormElement>, data: LaunchFormData) => {
       ev.preventDefault();
+      const url = await new Promise<string>((res) =>
+        setTimeout(() => res("ws://localhost:8080"), 3000)
+      );
+      createWS(url);
+      setData(data);
     },
     []
   );
 
   return (
-    <main className={styles.container}>
+    <Center>
       <LaunchForm onSubmit={handleSubmit} />
-    </main>
+    </Center>
   );
 }

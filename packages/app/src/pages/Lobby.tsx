@@ -1,3 +1,5 @@
+import { Center } from "../components/Center";
+
 export function Lobby() {
-  return null;
+  return <Center>oi</Center>;
 }

@@ -28,7 +28,6 @@
   "extensions": [
     "streetsidesoftware.code-spell-checker",
     "editorconfig.editorconfig",
-    "runem.lit-plugin",
     "esbenp.prettier-vscode"
   ],
 
