@@ -8,6 +8,12 @@ namespace ExchangeGame.Messaging.DTO
 {
     public class AttendeeDTO
     {
+        public AttendeeDTO(Attendee attendee)
+        {
+            Id = attendee.Id;
+            DisplayName = attendee.DisplayName;
+        }
+
         public int Id { get; set; }
 
         public string DisplayName { get; set; }

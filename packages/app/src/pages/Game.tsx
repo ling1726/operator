@@ -5,8 +5,11 @@ import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
 import { Scorebar } from "../components/Scorebar";
 import { Mission } from "../components/Mission";
+import { gameSelector, useGameService } from "../machines/game";
+import { useSelector } from "@xstate/react";
+import { Redirect } from "react-router";
 
-const exchanges = [
+const exchangesMock = [
   { id: 0, displayName: "A" },
   { id: 1, displayName: "B" },
   { id: 2, displayName: "C" },
@@ -41,8 +44,13 @@ const useStyles = makeStyles({
 
 });
 
-export default function App() {
+export function Game() {
   const styles = useStyles();
+  const gameService = useGameService();
+  const exchanges = useSelector(gameService, gameSelector.exchanges);
+  const attendees = useSelector(gameService, gameSelector.attendees);
+  const score = useSelector(gameService, gameSelector.score);
+  const mission = useSelector(gameService, gameSelector.mission);
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
@@ -50,34 +58,21 @@ export default function App() {
     number | undefined
   >();
 
-  const [score, setScore] = React.useState<number>(100);
-  // TODO keep until score hooked up to BE
-  const scoreRef = React.useRef(() => {});
-  React.useEffect(() => {
-    scoreRef.current = () => {
-      setScore((score) => {
-        const nextScore = score - 10;
-        if (nextScore < 0) {
-          return 100;
-        }
 
-        return nextScore;
-      });
-    };
-    const timer = setInterval(scoreRef.current, 500);
+  const isGameOver = useSelector(gameService, gameSelector.isGameOver);
 
-    return () => clearInterval(timer);
-  }, []);
+  if (isGameOver) { return <Redirect to="/over" /> }
 
   return (
     <div className={styles.grid}>
       <div className={styles.row}>
         <Mission
+          key={mission.id}
           onMissionTimeout={() => console.log('mission over')}
-          name="Important call"
-          callee="Harry"
-          caller="Tom"
-          duration={6000}
+          name={mission.name}
+          callee={mission.caller}
+          caller={mission.callee}
+          duration={mission.duration}
           exchange={exchanges[0].displayName}
         />
       </div>
@@ -96,7 +91,7 @@ export default function App() {
       </div>
       <Divider />
       <div className={styles.row}>
-        {attendants.map((attendant) => (
+        {attendees.map((attendant) => (
           <Displayable
             key={attendant.id}
             id={attendant.id}

@@ -1,9 +1,21 @@
 type ID = number;
 
-export interface Player {
+export interface GameObject {
   id: ID;
   displayName: string;
+}
+export interface Player extends GameObject {
   ready: boolean;
+}
+
+export interface Exchange extends GameObject {}
+export interface Attendee extends GameObject {}
+export interface Mission extends GameObject {
+  caller: Attendee;
+  callee: Attendee;
+  exchange: ID;
+  timestamp: number;
+  duration: number;
 }
 
 export type RegisterRequest = {
@@ -28,22 +40,15 @@ export type LobbyResponse = {
 export type StartResponse = {
   type: "Start";
   payload: {
-    exchanges: any[];
-    attendees: any[];
+    exchanges: Exchange[];
+    attendees: Attendee[];
+    score: number;
   };
 };
 
 export type MissionResponse = {
   type: "Mission";
-  payload: {
-    id: ID;
-    caller: ID;
-    callee: ID;
-    exchange: ID;
-    timestamp: number;
-    duration: number;
-    displayName: string;
-  };
+  payload: Mission; 
 };
 
 export type ConnectResponse = {

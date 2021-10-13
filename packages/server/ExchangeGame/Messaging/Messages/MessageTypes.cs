@@ -17,5 +17,7 @@ namespace ExchangeGame.Messaging.Messages
         public static string Lobby = "Lobby";
 
         public static string Connection = "Connect";
+
+        public static string GameOver = "GameOver";
     }
 }

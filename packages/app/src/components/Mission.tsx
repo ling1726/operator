@@ -78,17 +78,23 @@ function CountdownCircle(props: CountDownCircleProps) {
   React.useEffect(() => {
     progressRef.current = () => {
       setProgress((progress) => {
-        const nextProgress = progress - tickProgress;
+        // const nextProgress = progress - tickProgress;
         // TODO remove this when hooked up to BE
-        if (nextProgress < 0) {
+        // if (nextProgress < 0) {
+        //   onTimeout();
+        //   return 100;
+        // }
+        // return nextProgres;
+
+        if (progress <= 0) {
           onTimeout();
-          return 100;
+          return 0;
         }
 
-        return nextProgress;
+        return progress - tickProgress;
       });
     };
-  });
+  }, []);
 
   React.useEffect(() => {
     const timer = setInterval(progressRef.current, tickDuration);

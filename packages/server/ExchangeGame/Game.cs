@@ -10,6 +10,8 @@ namespace ExchangeGame
 {
     public class Game
     {
+
+        public bool GameOver { get; private set; }
         public Dictionary<int, Player> Players { get; } = new Dictionary<int, Player>();
 
         public Dictionary<int, Exchange> Exchanges { get; } = new Dictionary<int, Exchange>();
@@ -83,7 +85,7 @@ namespace ExchangeGame
         {
             foreach (var player in Players.Values)
             {
-                var message = new StartMessage(Exchanges.Values, player.Attendees);
+                var message = new StartMessage(Exchanges.Values, player.Attendees, Score);
                 player.SendMessage(JsonHelpers.SerializeMessage(message));
             }
         }
@@ -129,8 +131,20 @@ namespace ExchangeGame
         private void OnUpdateScore(int scoreToUpdate, Exchange exchange, Attendee attendee)
         {
             Score += scoreToUpdate;
-            var message = new ScoreMessage(exchange, attendee, Score);
-            BroadcastMessage(JsonHelpers.SerializeMessage(message));
+
+            if (Score >= FAIL_SCORE)
+            {
+                var message = new GameOverMessage();
+                Console.WriteLine("GAME OVER");
+                GameOver = true;
+                BroadcastMessage(JsonHelpers.SerializeMessage(message));
+            } 
+            else
+            {
+                var message = new ScoreMessage(exchange, attendee, Score);
+                BroadcastMessage(JsonHelpers.SerializeMessage(message));
+            }
+            
         }
 
         private Call MatchCall(Player player = null)
@@ -152,7 +166,10 @@ namespace ExchangeGame
             _availableAttendees[call.Sender.Player].Add(call.Sender);
             _availableAttendees[call.Recipient.Player].Add(call.Recipient);
 
-            CreateCall(call.Sender.Player);
+            if (!GameOver)
+            {
+                CreateCall(call.Sender.Player);
+            }
         }
     }
 }

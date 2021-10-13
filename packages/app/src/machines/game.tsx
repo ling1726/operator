@@ -39,6 +39,10 @@ export interface GameContext {
   username?: string;
   socketRef: ActorRef<SocketEvent, SocketState>;
   players: api.Player[];
+  exchanges: api.Exchange[];
+  attendees: api.Attendee[];
+  score: number;
+  mission: api.Mission;
 }
 
 export type GameTypestate =
@@ -93,12 +97,20 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
           Ready: {
             actions: "sendSocketReady",
           },
-          Start: "playing",
+          Start: {
+            target: "playing",
+            actions: ["assignExchanges", "assignAttendees", "assignScore"],
+          },
         },
       },
       playing: {
         on: {
-          Mission: {},
+          Mission: {
+            actions: "assignMission",
+          },
+          Score: {
+            actions: "assignScore",
+          },
           Connect: {},
           GameOver: "game_over",
         },
@@ -120,6 +132,10 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
         }),
         { to: "socket" }
       ) as SendAction<GameContext, GameEvent, SocketEvent>,
+      assignExchanges: assign((_, ev: api.StartResponse) => ({ exchanges: ev.payload.exchanges } )) as AssignAction<GameContext, GameEvent>,
+      assignAttendees: assign((_, ev: api.StartResponse) => ({ attendees: ev.payload.attendees } )) as AssignAction<GameContext, GameEvent>,
+      assignScore: assign((_, ev: api.StartResponse) => ({ score: ev.payload.score} )) as AssignAction<GameContext, GameEvent>,
+      assignMission: assign((_, ev: api.MissionResponse) => ({ mission: ev.payload } )) as AssignAction<GameContext, GameEvent>,
       assignLobby: assign((_, ev: api.LobbyResponse) => ({
         players: ev.payload.players,
       })) as AssignAction<GameContext, GameEvent>,
@@ -156,6 +172,36 @@ export const gameSelector = {
   isRegistered: (state: GameState) => state.matches("registered"),
   isPlaying: (state: GameState) => state.matches("playing"),
   isGameOver: (state: GameState) => state.matches("game_over"),
+  exchanges: (state: GameState) => state.context.exchanges,
+  attendees: (state: GameState) => state.context.attendees,
+  // BE score starts from 0
+  score: (state: GameState) => 100-state.context.score,
+  mission: (state: GameState) => {
+    const exchangeName = state.context.exchanges.find(x => x.id === state.context.mission?.exchange)?.displayName;
+
+    if (!exchangeName || !state.context.mission) {
+      console.error('Cannot find game objects in client, please report this error');
+      return {
+        name: '',
+        caller: '',
+        callee: '',
+        exchange: '',
+        duration: 3000,
+        id: 1,
+      };
+    }
+
+    const mission = state.context.mission;
+
+    return {
+      name: mission.displayName,
+      duration: mission.duration,
+      caller: mission.caller.displayName,
+      callee: mission.callee.displayName,
+      exchange: exchangeName,
+      id: state.context.mission.id,
+    }
+  }
 };
 
 export const GameProvider = memo((props) => {

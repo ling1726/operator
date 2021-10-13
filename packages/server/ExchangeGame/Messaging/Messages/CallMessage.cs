@@ -1,4 +1,5 @@
-﻿using ExchangeGame.Messaging.Messages;
+﻿using ExchangeGame.Messaging.DTO;
+using ExchangeGame.Messaging.Messages;
 
 namespace ExchangeGame.Messaging
 {
@@ -10,8 +11,8 @@ namespace ExchangeGame.Messaging
             Payload = new CallMessagePayload
             {
                 Id = call.Id,
-                Caller = call.Sender.Id,
-                Callee = call.Recipient.Id,
+                Caller = new AttendeeDTO(call.Sender),
+                Callee = new AttendeeDTO(call.Recipient),
                 DisplayName = call.DisplayName,
                 Duration = call.Duration,
                 Exchange = exchange.Id,
@@ -24,9 +25,9 @@ namespace ExchangeGame.Messaging
     {
         public int Id { get; set; }
 
-        public int Caller { get; set; }
+        public AttendeeDTO Caller { get; set; }
 
-        public int Callee { get; set; }
+        public AttendeeDTO Callee { get; set; }
 
         public int Exchange { get; set; }
 
