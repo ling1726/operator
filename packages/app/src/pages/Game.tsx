@@ -1,9 +1,10 @@
 import * as React from "react";
-import { makeStyles} from "@fluentui/react-make-styles";
+import { makeStyles } from "@fluentui/react-make-styles";
 import { Divider } from "@fluentui/react-components";
 import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
 import { Scorebar } from "../components/Scorebar";
+import { Mission } from "../components/Mission";
 
 const exchanges = [
   { id: 0, displayName: "A" },
@@ -46,18 +47,39 @@ export default function App() {
   const [selectedAttendant, setSelectedAttendant] = React.useState<
     number | undefined
   >();
+
   const [score, setScore] = React.useState<number>(100);
-
-  // Make the score move around while no score received from the BE
-  const intervalRef = React.useRef<number>(0);
+  // TODO keep until score hooked up to BE
+  const scoreRef = React.useRef(() => {});
   React.useEffect(() => {
-    intervalRef.current = setInterval(() => setScore(Math.random()*100), 3000);
+    scoreRef.current = () => {
+      setScore((score) => {
+        const nextScore = score - 10;
+        if (nextScore < 0) {
+          return 100;
+        }
 
-    return () => clearInterval(intervalRef.current);
+        return nextScore;
+      });
+    };
+    const timer = setInterval(scoreRef.current, 500);
+
+    return () => clearInterval(timer);
   }, []);
-  
+
   return (
     <div className={styles.grid}>
+      <div className={styles.row}>
+        <Mission
+          onMissionTimeout={() => console.log('mission over')}
+          name="Important call"
+          callee="Harry"
+          caller="Tom"
+          duration={6000}
+          exchange={exchanges[0].displayName}
+        />
+      </div>
+      <Divider />
       <div className={styles.row}>
         {exchanges.map((exchange) => (
           <Displayable
@@ -84,6 +106,7 @@ export default function App() {
         ))}
       </div>
 
+      <Divider />
       <Scorebar score={score} />
     </div>
   );

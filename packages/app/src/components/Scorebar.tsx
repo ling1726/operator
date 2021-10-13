@@ -3,11 +3,6 @@ import { makeStyles, mergeClasses } from "@fluentui/react-components";
 
 const useStyles = makeStyles({
   root: {
-    marginTop: "5px",
-    marginBotton: "5px",
-    paddingLeft: '5px',
-    paddingRight: '5px',
-
     [`& .${linearProgressClasses.root}`]: {
       height: '30px',
       borderRadius: '5px'
