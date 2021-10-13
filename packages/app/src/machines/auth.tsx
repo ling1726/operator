@@ -82,10 +82,7 @@ export const authMachine = createMachine<AuthContext, AuthEvent, AuthTypestate>(
       ) as AssignAction<AuthContext, AuthEvent>,
     },
     services: {
-      connect: async () =>
-        new Promise<string>((res) =>
-          setTimeout(() => res("ws://localhost:8080"), 3000)
-        ),
+      connect: async () => "ws://localhost:8080",
     },
   }
 );

@@ -10,9 +10,8 @@ const useStyles = makeStyles({
   root: {
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    gridTemplateRows: "repeat(3, 1fr)",
+    gridTemplateRows: "repeat(2, 1fr)",
     gridTemplateAreas: `
-      "user-name user-name"
       "server    server"
       "......    ......"
     `,
@@ -24,16 +23,12 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
   },
-  userName: {
-    gridArea: "user-name",
-  },
   server: {
     gridArea: "server",
   },
 });
 
 export interface LaunchFormData {
-  username: string;
   serverName: string;
   type: "join" | "host";
 }
@@ -60,7 +55,6 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
 
       if (onSubmit) {
         onSubmit(ev, {
-          username: userNameInput.value,
           serverName: serverInput.value,
           type: typeRef.current,
         });
@@ -81,24 +75,6 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.root}>
-      <span className={mergeClasses(styles.input, styles.userName)}>
-        <Label
-          disabled={loading}
-          size="large"
-          htmlFor="user-name-input"
-          required
-        >
-          Username
-        </Label>
-        <input
-          disabled={loading}
-          autoComplete="off"
-          type="text"
-          name="user-name"
-          id="user-name-input"
-          required
-        />
-      </span>
       <span className={mergeClasses(styles.input, styles.server)}>
         <Label disabled={loading} size="large" htmlFor="server-input" required>
           Server
