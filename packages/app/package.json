@@ -17,10 +17,12 @@
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@mui/icons-material": "^5.0.3",
     "@mui/material": "^5.0.3",
+    "@xstate/react": "^1.6.1",
     "normalize.css": "^8.0.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
-    "react-router-dom": "^5.3.0"
+    "react-router-dom": "^5.3.0",
+    "xstate": "^4.25.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",

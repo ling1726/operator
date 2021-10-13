@@ -33,21 +33,18 @@ const useStyles = makeStyles({
 });
 
 export interface LaunchFormData {
-  userName: string;
+  username: string;
   serverName: string;
   type: "join" | "host";
 }
 
 export interface LaunchFormProps {
-  onSubmit?(
-    ev: React.FormEvent<HTMLFormElement>,
-    data: LaunchFormData
-  ): void | Promise<void>;
+  onSubmit?(ev: React.FormEvent<HTMLFormElement>, data: LaunchFormData): void;
+  loading?: boolean;
 }
 
-export function LaunchForm(props: LaunchFormProps) {
+export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
   const styles = useStyles();
-  const [loading, setLoading] = React.useState(false);
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const typeRef = React.useRef<LaunchFormData["type"]>("host");
@@ -61,21 +58,16 @@ export function LaunchForm(props: LaunchFormProps) {
         "user-name"
       ) as HTMLInputElement;
 
-      if (props.onSubmit) {
-        const loading = props.onSubmit(ev, {
-          userName: serverInput.value,
-          serverName: userNameInput.value,
+      if (onSubmit) {
+        onSubmit(ev, {
+          username: userNameInput.value,
+          serverName: serverInput.value,
           type: typeRef.current,
         });
-        if (loading instanceof Promise) {
-          setLoading(true);
-          await loading;
-          setLoading(false);
-        }
       }
       formRef.current?.reset();
     },
-    [props.onSubmit]
+    [onSubmit]
   );
 
   const requestJoin = React.useCallback(() => {
