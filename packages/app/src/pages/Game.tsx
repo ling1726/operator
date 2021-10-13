@@ -36,7 +36,9 @@ const useStyles = makeStyles({
     display: "flex",
     flexWrap: "wrap",
     gap: "1rem",
+    justifyContent: 'center',
   },
+
 });
 
 export default function App() {

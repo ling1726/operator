@@ -1,15 +1,19 @@
 import * as React from "react";
-import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
+import { makeStyles, mergeClasses, Headline } from "@fluentui/react-components";
 
 const useStyles = makeStyles({
   root: {
     height: "100px",
     width: "100px",
-    border: "2px black solid",
+    border: "none",
     display: "flex",
+    flexDirection: 'column',
+    gap: '5px',
+    alignItems: 'center',
     cursor: "pointer",
+    background: "none",
   },
   checked: {
     borderColor: "red",
@@ -35,8 +39,8 @@ export function Displayable(props: DisplayableProps) {
       onClick={handleClick}
       className={mergeClasses(styles.root, props.checked && styles.checked)}
     >
-      {props.displayName}
-      <FontAwesomeIcon icon={props.icon} />
+      <FontAwesomeIcon icon={props.icon} size="4x" />
+      <Headline>{props.displayName}</Headline>
     </button>
   );
 }

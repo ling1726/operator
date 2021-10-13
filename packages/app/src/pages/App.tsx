@@ -1,5 +1,5 @@
 import { Switch, Route, Redirect } from "react-router-dom";
-import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
+import { makeStyles } from "@fluentui/react-make-styles";
 import { Landing } from "./Landing";
 import { Lobby } from "./Lobby";
 import Game from "./Game";
