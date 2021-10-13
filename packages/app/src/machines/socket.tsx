@@ -100,6 +100,7 @@ export const socketMachine = createMachine<
         ],
       },
       connecting: {
+        invoke: { src: "listenOpen" },
         on: {
           REQUEST_CLOSE: "closing",
         },
@@ -171,11 +172,13 @@ export const socketMachine = createMachine<
       listenResponse:
         ({ socket }) =>
         (send) => {
-          const listener = (ev: MessageEvent<string>) =>
+          const listener = (ev: MessageEvent<string>) => {
+            console.log("response arrive");
             send({
               type: "RESPONSE",
               payload: JSON.parse(ev.data),
             });
+          };
           socket.addEventListener("message", listener);
           return () => socket.removeEventListener("message", listener);
         },

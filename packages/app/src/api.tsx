@@ -78,7 +78,3 @@ export type Response =
   | LaunchResponse;
 
 export type Request = RegisterRequest | ReadyRequest;
-
-export function send(ws: WebSocket, request: Request) {
-  ws.send(JSON.stringify(request));
-}
