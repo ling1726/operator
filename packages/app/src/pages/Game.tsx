@@ -3,6 +3,8 @@ import { makeStyles } from "@fluentui/react-make-styles";
 import { Divider } from "@fluentui/react-components";
 import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
+import { Scorebar } from "../components/Scorebar";
+import { Mission } from "../components/Mission";
 
 const exchanges = [
   { id: 0, displayName: "A" },
@@ -45,8 +47,39 @@ export default function App() {
   const [selectedAttendant, setSelectedAttendant] = React.useState<
     number | undefined
   >();
+
+  const [score, setScore] = React.useState<number>(100);
+  // TODO keep until score hooked up to BE
+  const scoreRef = React.useRef(() => {});
+  React.useEffect(() => {
+    scoreRef.current = () => {
+      setScore((score) => {
+        const nextScore = score - 10;
+        if (nextScore < 0) {
+          return 100;
+        }
+
+        return nextScore;
+      });
+    };
+    const timer = setInterval(scoreRef.current, 500);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={styles.grid}>
+      <div className={styles.row}>
+        <Mission
+          onMissionTimeout={() => console.log('mission over')}
+          name="Important call"
+          callee="Harry"
+          caller="Tom"
+          duration={6000}
+          exchange={exchanges[0].displayName}
+        />
+      </div>
+      <Divider />
       <div className={styles.row}>
         {exchanges.map((exchange) => (
           <Displayable
@@ -72,6 +105,9 @@ export default function App() {
           />
         ))}
       </div>
+
+      <Divider />
+      <Scorebar score={score} />
     </div>
   );
 }

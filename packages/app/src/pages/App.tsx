@@ -1,4 +1,4 @@
-import { useActor, useInterpret, useSelector } from "@xstate/react";
+import { useInterpret, useSelector } from "@xstate/react";
 import { memo, useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { authSelector, useAuthService } from "../machines/auth";
