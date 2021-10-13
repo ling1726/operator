@@ -1,34 +1,40 @@
 type ID = number;
 
+export interface Player {
+  id: ID;
+  displayName: string;
+  ready: boolean;
+}
+
 export type RegisterRequest = {
-  type: "REGISTER";
+  type: "Register";
   payload: {
     username: string;
   };
 };
 
 export type ReadyRequest = {
-  type: "READY";
+  type: "Ready";
   payload: {};
 };
 
 export type LobbyResponse = {
-  type: "lobby";
+  type: "Lobby";
   payload: {
-    id: ID;
-    displayName: string;
-    ready: boolean;
-  }[];
+    players: Player[];
+  };
 };
+
 export type StartResponse = {
-  type: "start";
+  type: "Start";
   payload: {
     exchanges: any[];
     attendees: any[];
   };
 };
+
 export type MissionResponse = {
-  type: "mission";
+  type: "Mission";
   payload: {
     id: ID;
     caller: ID;
@@ -39,24 +45,28 @@ export type MissionResponse = {
     displayName: string;
   };
 };
+
 export type ConnectResponse = {
-  type: "connect";
+  type: "Connect";
   payload: {
     exchange: ID;
     attendee: ID;
   };
 };
+
 export type ScoreResponse = {
-  type: "score";
+  type: "Score";
   payload: {
     score: number;
     exchange: ID;
     attendee: ID;
   };
 };
-export type GameOverResponse = { type: "gameover"; payload: void };
+
+export type GameOverResponse = { type: "GameOver"; payload: void };
+
 export type LaunchResponse = {
-  type: "launch";
+  type: "Launch";
   payload: {
     wsAddress: string;
   };

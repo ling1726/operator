@@ -1,15 +1,17 @@
 import { useInterpret, useSelector } from "@xstate/react";
 import { createContext, memo, useContext, useEffect } from "react";
 import {
-  actions,
   ActorRef,
+  assign,
   AssignAction,
   createMachine,
   Interpreter,
+  send,
   SendAction,
   spawn,
   State,
 } from "xstate";
+import * as api from "../api";
 import { useAuthService } from "./auth";
 import {
   SocketEvent,
@@ -19,40 +21,16 @@ import {
 } from "./socket";
 
 export type GameEvent =
+  | api.RegisterRequest
+  | api.LobbyResponse
+  | api.ReadyRequest
+  | api.StartResponse
+  | api.MissionResponse
+  | api.ConnectResponse
+  | api.ScoreResponse
+  | api.GameOverResponse
   | {
-      type: "REGISTER";
-      payload: {
-        username: string;
-      };
-    }
-  | {
-      type: "LOBBY";
-      payload: { players: any[] };
-    }
-  | {
-      type: "READY";
-    }
-  | {
-      type: "START";
-      payload: any;
-    }
-  | {
-      type: "MISSION";
-      payload: any;
-    }
-  | {
-      type: "CONNECT";
-      payload: any;
-    }
-  | {
-      type: "SCORE_UPDATE";
-      payload: any;
-    }
-  | {
-      type: "GAME_OVER";
-    }
-  | {
-      type: "ERROR";
+      type: "Error";
       payload: Event;
     };
 
@@ -60,6 +38,7 @@ export interface GameContext {
   socket: WebSocket;
   username?: string;
   socketRef: ActorRef<SocketEvent, SocketState>;
+  players: api.Player[];
 }
 
 export type GameTypestate =
@@ -94,13 +73,13 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
     id: "game",
     initial: "idle",
     on: {
-      ERROR: "error",
+      Error: "error",
     },
     entry: "assignSocketRef",
     states: {
       idle: {
         on: {
-          REGISTER: {
+          Register: {
             target: "registered",
             actions: ["requestRegister", "assignUsername"],
           },
@@ -108,16 +87,20 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
       },
       registered: {
         on: {
-          LOBBY: {},
-          READY: {},
-          START: "playing",
+          Lobby: {
+            actions: "assignLobby",
+          },
+          Ready: {
+            actions: "sendSocketReady",
+          },
+          Start: "playing",
         },
       },
       playing: {
         on: {
-          MISSION: {},
-          CONNECT: {},
-          GAME_OVER: "game_over",
+          Mission: {},
+          Connect: {},
+          GameOver: "game_over",
         },
       },
       game_over: {
@@ -130,8 +113,18 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
   },
   {
     actions: {
-      requestRegister: actions.send(
-        (_, ev: Extract<GameEvent, { type: "REGISTER" }>): SocketEvent => ({
+      sendSocketReady: send<GameContext, api.ReadyRequest, SocketEvent>(
+        (_, ev) => ({
+          type: "REQUEST",
+          payload: ev,
+        }),
+        { to: "socket" }
+      ) as SendAction<GameContext, GameEvent, SocketEvent>,
+      assignLobby: assign((_, ev: api.LobbyResponse) => ({
+        players: ev.payload.players,
+      })) as AssignAction<GameContext, GameEvent>,
+      requestRegister: send(
+        (_, ev: Extract<GameEvent, { type: "Register" }>): SocketEvent => ({
           type: "REQUEST",
           payload: ev,
         }),
@@ -139,13 +132,13 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
           to: (ctx) => ctx.socketRef,
         }
       ) as SendAction<GameContext, GameEvent, SocketEvent>,
-      assignUsername: actions.assign(
-        (_, ev: Extract<GameEvent, { type: "REGISTER" }>) => ({
+      assignUsername: assign(
+        (_, ev: Extract<GameEvent, { type: "Register" }>) => ({
           username: ev.payload.username,
         })
       ) as AssignAction<GameContext, GameEvent>,
-      assignSocketRef: actions.assign(({ socket }) => ({
-        socketRef: spawn(socketMachine.withContext({ socket })),
+      assignSocketRef: assign(({ socket }) => ({
+        socketRef: spawn(socketMachine.withContext({ socket }), "socket"),
       })),
     },
   }
@@ -153,8 +146,11 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
 
 const context = createContext<GameService | undefined>(undefined);
 
+const defaultPlayers: api.Player[] = [];
+
 export const gameSelector = {
   socketRef: (state: GameState) => state.context.socketRef,
+  players: (state: GameState) => state.context.players ?? defaultPlayers,
   username: (state: GameState) => state.context.username,
   isIdle: (state: GameState) => state.matches("idle"),
   isRegistered: (state: GameState) => state.matches("registered"),

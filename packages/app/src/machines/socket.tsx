@@ -172,13 +172,11 @@ export const socketMachine = createMachine<
       listenResponse:
         ({ socket }) =>
         (send) => {
-          const listener = (ev: MessageEvent<string>) => {
-            console.log("response arrive");
+          const listener = (ev: MessageEvent<string>) =>
             send({
               type: "RESPONSE",
               payload: JSON.parse(ev.data),
             });
-          };
           socket.addEventListener("message", listener);
           return () => socket.removeEventListener("message", listener);
         },
