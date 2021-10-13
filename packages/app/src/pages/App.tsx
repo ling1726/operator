@@ -1,10 +1,11 @@
+import { useInterpret, useSelector } from "@xstate/react";
+import { memo, useEffect } from "react";
+import { makeStyles } from "@fluentui/react-components";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { makeStyles } from "@fluentui/react-make-styles";
+import { authSelector, useAuthService } from "../machines/auth";
+import { socketMachine, socketSelector } from "../machines/socket";
 import { Landing } from "./Landing";
 import { Lobby } from "./Lobby";
-import Game from "./Game";
-import { Scorebar } from "../components/Scorebar";
-import { useWebSocket } from "../hooks/useWebSocket";
 
 const useStyles = makeStyles({
   pageDimensions: {
@@ -14,25 +15,34 @@ const useStyles = makeStyles({
 });
 
 export function App() {
-  const [message, { state }] = useWebSocket();
   const styles = useStyles();
-  console.log(message, state);
+  const isConnected = useSelector(useAuthService(), authSelector.isConnected);
   return (
-    <div className={styles.pageDimensions}>
-      <Switch>
-        <Route exact path="/lobby">
-          <Lobby />
-        </Route>
-        <Route path="/game">
-          <Game />
-        </Route>
-        <Route path="/test">
-          <Scorebar score={70} />
-        </Route>
+    <Switch>
+      <main className={styles.pageDimensions}>
         <Route exact path="/">
-          {state === "OPEN" ? <Redirect to="/lobby" /> : <Landing />}
+          {isConnected ? <Redirect to="/lobby" /> : <Landing />}
         </Route>
-      </Switch>
-    </div>
+        {isConnected ? <InternalRoutes /> : <Redirect to="/" />}
+      </main>
+    </Switch>
   );
 }
+
+const InternalRoutes = memo(() => {
+  const authService = useAuthService();
+  const socket = useSelector(useAuthService(), authSelector.socket);
+  const socketService = useInterpret(socketMachine, { context: { socket } });
+  const isClosed = useSelector(socketService, socketSelector.isClosed);
+  useEffect(() => {
+    if (isClosed) authService.send("DISCONNECT");
+  }, [isClosed, authService]);
+  return (
+    <>
+      <Route exact path="/lobby">
+        <Lobby />
+      </Route>
+      <Route path="/game">Game</Route>
+    </>
+  );
+});

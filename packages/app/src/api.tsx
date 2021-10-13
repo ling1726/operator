@@ -3,9 +3,7 @@ type ID = number;
 export type RegisterRequest = {
   type: "REGISTER";
   payload: {
-    userName: string;
-    serverName: string;
-    type: "join" | "host";
+    username: string;
   };
 };
 
@@ -80,3 +78,7 @@ export type Response =
   | LaunchResponse;
 
 export type Request = RegisterRequest | ReadyRequest;
+
+export function send(ws: WebSocket, request: Request) {
+  ws.send(JSON.stringify(request));
+}
