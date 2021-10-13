@@ -1,8 +1,9 @@
 import * as React from "react";
-import { makeStyles } from "@fluentui/react-make-styles";
+import { makeStyles} from "@fluentui/react-make-styles";
 import { Divider } from "@fluentui/react-components";
 import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
+import { Scorebar } from "../components/Scorebar";
 
 const exchanges = [
   { id: 0, displayName: "A" },
@@ -45,6 +46,16 @@ export default function App() {
   const [selectedAttendant, setSelectedAttendant] = React.useState<
     number | undefined
   >();
+  const [score, setScore] = React.useState<number>(100);
+
+  // Make the score move around while no score received from the BE
+  const intervalRef = React.useRef<number>(0);
+  React.useEffect(() => {
+    intervalRef.current = setInterval(() => setScore(Math.random()*100), 3000);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+  
   return (
     <div className={styles.grid}>
       <div className={styles.row}>
@@ -72,6 +83,8 @@ export default function App() {
           />
         ))}
       </div>
+
+      <Scorebar score={score} />
     </div>
   );
 }
