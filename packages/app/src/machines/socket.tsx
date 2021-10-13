@@ -5,6 +5,8 @@ import {
   State,
   sendParent,
   SendAction,
+  actions,
+  AssignAction,
 } from "xstate";
 
 import { Response, Request } from "../api";
@@ -29,6 +31,7 @@ export type SocketEvent =
 
 export interface SocketContext {
   socket: WebSocket;
+  latestResponse?: Response;
 }
 
 export type SocketTypestate =
@@ -104,7 +107,7 @@ export const socketMachine = createMachine<
       open: {
         on: {
           RESPONSE: {
-            actions: "raiseResponse",
+            actions: ["assignLatestResponse", "raiseResponse"],
           },
           REQUEST_CLOSE: "closing",
           REQUEST: {
@@ -130,6 +133,11 @@ export const socketMachine = createMachine<
         WebSocketState[readyState] === "CLOSED",
     },
     actions: {
+      assignLatestResponse: actions.assign(
+        (_, ev: Extract<SocketEvent, { type: "RESPONSE" }>) => ({
+          latestResponse: ev.payload,
+        })
+      ) as AssignAction<SocketContext, SocketEvent>,
       raiseResponse: sendParent(
         (_, ev: Extract<SocketEvent, { type: "RESPONSE" }>) => ev.payload
       ) as SendAction<SocketContext, SocketEvent, Response>,

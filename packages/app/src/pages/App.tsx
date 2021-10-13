@@ -31,8 +31,9 @@ export function App() {
 
 const InternalRoutes = memo(() => {
   const authService = useAuthService();
-  const socket = useSelector(useAuthService(), authSelector.socket);
-  const socketService = useInterpret(socketMachine, { context: { socket } });
+  const socketService = useInterpret(socketMachine, {
+    context: { socket: authService.state.context.socket },
+  });
   const isClosed = useSelector(socketService, socketSelector.isClosed);
   useEffect(() => {
     if (isClosed) authService.send("DISCONNECT");
