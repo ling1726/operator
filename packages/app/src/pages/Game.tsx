@@ -70,8 +70,8 @@ export function Game() {
           key={mission.id}
           onMissionTimeout={() => console.log('mission over')}
           name={mission.name}
-          callee={mission.caller}
-          caller={mission.callee}
+          callee={mission.callee}
+          caller={mission.caller}
           duration={mission.duration}
           exchange={exchanges[0].displayName}
         />
