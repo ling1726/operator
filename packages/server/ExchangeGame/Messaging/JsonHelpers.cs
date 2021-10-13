@@ -22,7 +22,7 @@ namespace ExchangeGame.Messaging
 
         public static string SerializeMessage<T>(Message<T> message)
         {
-            return JsonSerializer.Serialize(message);
+            return JsonSerializer.Serialize(message, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
     }
 }
