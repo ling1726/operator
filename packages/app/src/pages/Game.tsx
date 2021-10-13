@@ -9,20 +9,6 @@ import { gameSelector, useGameService } from "../machines/game";
 import { useSelector } from "@xstate/react";
 import { Redirect } from "react-router";
 
-const exchangesMock = [
-  { id: 0, displayName: "A" },
-  { id: 1, displayName: "B" },
-  { id: 2, displayName: "C" },
-];
-
-const attendants = [
-  { id: 3, displayName: "Player 1" },
-  { id: 4, displayName: "Player 2" },
-  { id: 5, displayName: "Player 3" },
-  { id: 6, displayName: "Player 4" },
-  { id: 7, displayName: "Player 5" },
-];
-
 const useStyles = makeStyles({
   grid: {
     display: "grid",
