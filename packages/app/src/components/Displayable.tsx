@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     background: "none",
   },
   checked: {
-    borderColor: "red",
+    border: '1px solid red',
   },
 });
 
