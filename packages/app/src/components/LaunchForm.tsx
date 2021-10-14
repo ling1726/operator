@@ -1,10 +1,6 @@
 import * as React from "react";
-import {
-  makeStyles,
-  mergeClasses,
-  Label,
-} from "@fluentui/react-components";
-import { Button, Input } from '@react95/core';
+import { makeStyles, mergeClasses, Label } from "@fluentui/react-components";
+import { Button, Input } from "@react95/core";
 
 const useStyles = makeStyles({
   root: {
@@ -43,10 +39,11 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
   const styles = useStyles();
 
   const formRef = React.useRef<HTMLFormElement>(null);
-  const typeRef = React.useRef<LaunchFormData["type"]>("host");
+  const typeRef = React.useRef<LaunchFormData["type"]>();
 
   const handleSubmit = React.useCallback(
     async (ev: React.FormEvent<HTMLFormElement>) => {
+      ev.preventDefault();
       const serverInput = ev.currentTarget.elements.namedItem(
         "server"
       ) as HTMLInputElement;
@@ -54,13 +51,14 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
         "user-name"
       ) as HTMLInputElement;
 
-      if (onSubmit) {
+      if (onSubmit && typeRef.current) {
         onSubmit(ev, {
           serverName: serverInput.value,
           type: typeRef.current,
         });
+        formRef.current?.reset();
+        typeRef.current = undefined;
       }
-      formRef.current?.reset();
     },
     [onSubmit]
   );
@@ -89,20 +87,10 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
           required
         />
       </span>
-      <Button
-        disabled={loading}
-        onClick={requestJoin}
-        type="button"
-        appearance="primary"
-      >
+      <Button disabled={loading} onClick={requestJoin} type="button">
         Join
       </Button>
-      <Button
-        disabled={loading}
-        onClick={requestHost}
-        type="button"
-        appearance="outline"
-      >
+      <Button disabled={loading} onClick={requestHost} type="button">
         Host
       </Button>
     </form>
