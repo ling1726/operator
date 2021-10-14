@@ -9,19 +9,28 @@ import { Awschd32402 } from "@react95/icons";
 
 const useStyles = makeStyles({
   root: {
-    // display: "flex",
-    // flexDirection: "column",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // gap: "2rem",
-    maxWidth: "350px",
-    // margin: "auto",
+    maxWidth: "600px",
   },
   frame: {
     padding: "0 20px 20px 20px",
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gridTemplateRows: "repeat(2, 1fr)",
+    alignItems: "center",
   },
   titleBar: {
     width: "100%",
+  },
+  image: {
+    gridArea: "1 / 1 / 3 / 2",
+    display: "block",
+    height: "400px",
+    width: "200px",
+    backgroundImage: `url('https://i.pinimg.com/originals/7c/d0/9e/7cd09e9f8e5c461aeb69a3a0b4b3df00.png')`,
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
+    backgroundPosition: "15%",
+    backgroundSize: "400px",
   },
   paragraph: (theme) => ({
     textAlign: "justify",
@@ -51,6 +60,7 @@ export const Landing = memo(() => {
           </TitleBar.OptionsBox>
         </TitleBar>
         <article className={styles.frame}>
+          <span className={styles.image} />
           <p className={styles.paragraph}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quasi
             in rerum neque ut optio voluptates inventore quaerat nulla odio
