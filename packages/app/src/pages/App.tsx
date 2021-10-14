@@ -1,33 +1,22 @@
-import { useSelector } from "@xstate/react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import { makeStyles } from "@fluentui/react-make-styles";
-import { Landing } from "./Landing";
-import { Lobby } from "./Lobby";
+import { memo } from "react";
 import { Game } from "./Game";
+import { Lobby } from "./Lobby";
+import { Landing } from "./Landing";
+import { Switch, Route } from "react-router-dom";
 
-const useStyles = makeStyles({
-  main: {
-    maxWidth: "1260px",
-    margin: "0 auto",
-  },
-});
+export const App = memo(() => (
+  <Switch>
+    <Route exact path="/">
+      <Landing />
+    </Route>
+    <Route path="/over">Game Over</Route>
+    <Route exact path="/lobby">
+      <Lobby />
+    </Route>
+    <Route path="/game">
+      <Game />
+    </Route>
+  </Switch>
+));
 
-export function App() {
-  const styles = useStyles();
-  return (
-    <main className={styles.main}>
-      <Switch>
-        <Route exact path="/">
-          <Landing />
-        </Route>
-        <Route path="/over">Game Over</Route>
-        <Route exact path="/lobby">
-          <Lobby />
-        </Route>
-        <Route path="/game">
-          <Game />
-        </Route>
-      </Switch>
-    </main>
-  );
-}
+App.displayName = "App";

@@ -8,6 +8,7 @@ import {
 
 const useStyles = makeStyles({
   root: {
+    width: "100%",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gridTemplateRows: "repeat(2, 1fr)",

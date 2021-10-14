@@ -3,9 +3,11 @@ import { makeStyles, mergeClasses } from "@fluentui/react-components";
 const useStyles = makeStyles({
   container: {
     height: "100vh",
+    maxWidth: "1200px",
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "column",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
 });
 
@@ -13,8 +15,8 @@ export function Center(props: JSX.IntrinsicElements["main"]) {
   const styles = useStyles();
   return (
     <main
-      className={mergeClasses(styles.container, props.className)}
       {...props}
+      className={mergeClasses(styles.container, props.className)}
     />
   );
 }

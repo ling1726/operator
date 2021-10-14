@@ -1,55 +1,49 @@
-import * as React from "react";
-import { LaunchForm, LaunchFormData } from "../components/LaunchForm";
+import { LaunchForm } from "../components/LaunchForm";
 import { Center } from "../components/Center";
-import { useActor, useSelector } from "@xstate/react";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
 import { Redirect } from "react-router";
-import { gameSelectors } from "../machines/game";
-import { socketSelectors } from "../machines/socket";
-import { authSelectors } from "../machines/auth";
+import { makeStyles } from "@fluentui/react-components";
+import { memo } from "react";
+import { useLanding } from "../hooks/useLanding";
 
-export function Landing() {
-  const { authService, gameService } = useGlobalServices();
-  const socketRef = useSelector(gameService, gameSelectors.socketRef);
-  const socketURL = useSelector(authService, authSelectors.socketURL);
-  const isConnecting = useSelector(authService, authSelectors.isConnecting);
-  const isConnected = useSelector(authService, authSelectors.isConnected);
-  const isOpen = useSelector(socketRef, (state) => {
-    return state.matches("available.open");
-  });
-  const isSocketConnecting = useSelector(socketRef, (state) =>
-    state.matches("available.connecting")
-  );
-  const handleSubmit = React.useCallback(
-    (
-      ev: React.FormEvent<HTMLFormElement>,
-      { serverName, type }: LaunchFormData
-    ) => {
-      ev.preventDefault();
-      authService.send({
-        type: "CONNECT",
-        payload: { server: serverName, type },
-      });
-    },
-    [authService]
-  );
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "2rem",
+    maxWidth: "350px",
+    margin: "auto",
+  },
+  title: (theme) => ({
+    fontFamily: theme.fontFamilyBase,
+    fontSize: theme.fontSizeHero1000,
+    fontWeight: theme.fontWeightSemibold,
+  }),
+  paragraph: (theme) => ({
+    textAlign: "justify",
+    textJustify: "inter-word",
+    fontFamily: theme.fontFamilyMonospace,
+    fontSize: theme.fontSizeBase400,
+    fontWeight: theme.fontWeightMedium,
+  }),
+});
 
-  React.useEffect(() => {
-    if (isConnected && socketURL) {
-      socketRef.send({
-        type: "CONNECT",
-        payload: { url: socketURL },
-      });
-    }
-  }, [isConnected, socketRef, socketURL]);
-
-  if (isOpen) return <Redirect to="/lobby" />;
+export const Landing = memo(() => {
+  const styles = useStyles();
+  const { redirect, loading, onSubmit } = useLanding();
+  if (redirect) return <Redirect to="/lobby" />;
   return (
     <Center>
-      <LaunchForm
-        loading={isConnecting || isSocketConnecting}
-        onSubmit={handleSubmit}
-      />
+      <article className={styles.root}>
+        <h1 className={styles.title}>Operator</h1>
+        <p className={styles.paragraph}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quasi in
+          rerum neque ut optio voluptates inventore quaerat nulla odio
+          consectetur corporis voluptatum hic, at, cum ab ducimus fugit illo?
+        </p>
+        <LaunchForm loading={loading} onSubmit={onSubmit} />
+      </article>
     </Center>
   );
-}
+});
