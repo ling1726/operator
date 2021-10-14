@@ -39,7 +39,7 @@ export const authMachine = createMachine<AuthContext, AuthEvent, AuthTypestate>(
       ) as AssignAction<AuthContext, AuthEvent>,
     },
     services: {
-      connect: async () => "ws://localhost:8080",
+      connect: async () => import.meta.env.VITE_WS_HOST,
     },
   }
 );
