@@ -47,7 +47,7 @@ namespace ExchangeGame
 
 
             SetTimer();
-            _logger.LogInformation($"Call {displayName} between {Sender.DisplayName} and {Recipient.DisplayName}, duration {Duration}");
+            _logger.LogInformation($"Call {displayName} between {Sender.DisplayName} and {Recipient.DisplayName} duration {Duration}");
         }
 
         private void SetTimer()
@@ -85,6 +85,7 @@ namespace ExchangeGame
 
             if (CallComplete)
             {
+                _timer.Stop();
                 _logger.LogInformation($"Complete call: {DisplayName}");
                 Sender.InCall = false;
                 Recipient.InCall = false;

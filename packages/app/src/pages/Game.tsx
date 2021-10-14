@@ -38,6 +38,8 @@ export function Game() {
   const score = useSelector(gameService, gameSelectors.score);
   const mission = useSelector(gameService, gameSelectors.mission);
   const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
+  console.log(exchanges);
+  console.log(mission);
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
@@ -82,7 +84,7 @@ export function Game() {
           callee={mission.callee}
           caller={mission.caller}
           duration={mission.duration}
-          exchange={exchanges[0].displayName}
+          exchange={mission.exchange}
         />
       </div>
       <Divider />
