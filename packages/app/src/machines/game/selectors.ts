@@ -23,16 +23,14 @@ export const gameSelectors = {
     )?.displayName;
 
     if (!exchangeName || !state.context.mission) {
-      console.error(
-        "Cannot find game objects in client, please report this error"
-      );
       return {
         name: "",
         caller: "",
+        callerId: 1,
         callee: "",
         exchange: "",
-        duration: 3000,
-        id: 1,
+        duration: 13000,
+        id: -1,
       };
     }
 
@@ -42,6 +40,7 @@ export const gameSelectors = {
       name: mission.displayName,
       duration: mission.duration,
       caller: mission.caller.displayName,
+      callerId: mission.caller.id,
       callee: mission.callee.displayName,
       exchange: exchangeName,
       id: state.context.mission.id,

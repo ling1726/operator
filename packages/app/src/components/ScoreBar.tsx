@@ -5,8 +5,13 @@ import { memo } from "react";
 const useStyles = makeStyles({
   container: {
     display: "flex",
+    flexDirection: 'column',
+    gap: '10px',
     marginTop: "auto",
     marginBottom: "15px",
+    '& h2': {
+      margin: 0,
+    }
   },
 });
 
@@ -20,6 +25,7 @@ export const ScoreBar = memo((props: ScoreBarProps) => {
 
   return (
     <div className={styles.container}>
+      <h2>QoS</h2>
       <Progress value={score} variant="tile" />
     </div>
   );

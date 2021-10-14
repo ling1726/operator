@@ -69,10 +69,18 @@ export const Landing = memo(() => {
           <article className={styles.frame}>
             <span className={styles.image} />
             <p className={styles.paragraph}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quasi
-              in rerum neque ut optio voluptates inventore quaerat nulla odio
-              consectetur corporis voluptatum hic, at, cum ab ducimus fugit
-              illo?
+              Oh no! The Teams servers have been taken down by evil hacking kittens 🐱🐱.
+              Activating emergency call routing protocol...
+
+              <br />
+              <br />
+              ...[PLEASE INSERT DISK INTO DRIVE A:]
+              <br />
+              <br />
+              Looks like Howard's original floppy disk with the routing algorithm no longer exists!
+              <br />
+              <br />
+              <strong>Quick, route the incoming calls!</strong>
             </p>
             {!isGameOver && (
               <LaunchForm loading={loading} onSubmit={onSubmit} />

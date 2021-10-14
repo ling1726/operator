@@ -69,7 +69,7 @@ export default class Game {
     const playerValues = Object.values(this.players);
     if (playerValues.length > 1 && playerValues.every((x) => x.ready)) {
       this.start();
-      this.sendInitialCalls();
+      setTimeout(this.sendInitialCalls, 15000);
     }
   }
 
@@ -103,7 +103,7 @@ export default class Game {
     });
   }
 
-  private sendInitialCalls() {
+  private sendInitialCalls = () => {
     const messages = [];
 
     Object.values(this.players).forEach((player) => {

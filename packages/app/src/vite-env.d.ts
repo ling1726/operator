@@ -11,6 +11,7 @@ interface ImportMeta {
 declare module "react95" {
   import * as React from "react";
   export const Avatar: React.ElementType<any>;
+  export const Cutout: React.ElementType<any>;
   export const Progress: React.ElementType<any>;
   export const Divider: React.ElementType<any>;
 }

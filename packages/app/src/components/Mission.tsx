@@ -3,6 +3,7 @@ import { makeStyles } from "@fluentui/react-make-styles";
 import { Awschd32402, User } from "@react95/icons";
 import { Fieldset } from "@react95/core";
 import { Progress } from "react95";
+import { Avatar } from "react95";
 
 const useStyles = makeStyles({
   root: {
@@ -29,23 +30,25 @@ const tickProgress = 0.05;
 export interface MissionProps {
   name: string;
   caller: string;
+  callerId: number;
   callee: string;
   exchange: string;
   duration: number;
   onMissionTimeout: () => void;
+  id: number;
 }
 
 export const Mission = React.memo((props: MissionProps) => {
-  const { name, caller, callee, exchange, duration, onMissionTimeout } = props;
+  const { name, caller, callee, exchange, duration, onMissionTimeout, callerId, id } = props;
   const styles = useStyles();
 
   return (
-    <Fieldset style={{ width: 300 }}>
+    <Fieldset style={{ width: 300, display: 'flex', flexDirection: 'column' }}>
       <div>
-        <h2>{name}</h2>
+        <h2>{id == -1 ? 'Get ready' : name}</h2>
         <div className={styles.row}>
           {" "}
-          <User variant="32x32_4" /> <h4>{caller}</h4>
+          <Avatar src={`https://avatars.dicebear.com/api/pixel-art/${callerId}.svg`} /> <h4>{caller}</h4>
         </div>
         <div className={styles.row}>
           {" "}
@@ -65,7 +68,7 @@ Mission.displayName = "Mission";
 
 interface CountDownCircleProps {
   duration: number;
-  onTimeout: () => void;
+  onTimeout?: () => void;
 }
 
 const CountdownCircle = React.memo((props: CountDownCircleProps) => {
@@ -86,7 +89,7 @@ const CountdownCircle = React.memo((props: CountDownCircleProps) => {
         // return nextProgres;
 
         if (progress <= 0) {
-          onTimeout();
+          onTimeout?.();
           return 0;
         }
 
@@ -101,7 +104,7 @@ const CountdownCircle = React.memo((props: CountDownCircleProps) => {
     return () => clearInterval(timer);
   }, []);
 
-  return <Progress value={progress} hideValue />;
+  return <Progress style={{marginTop: 'auto'}} value={progress} hideValue />;
 });
 
 CountdownCircle.displayName = "CountdownCircle";

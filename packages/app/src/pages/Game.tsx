@@ -70,8 +70,10 @@ export const Game = React.memo(() => {
         <div style={{ display: "flex", padding: "10px" }}>
           <Mission
             key={mission.id}
+            id={mission.id}
             onMissionTimeout={() => console.log("mission over")}
             name={mission.name}
+            callerId={mission.callerId}
             callee={mission.callee}
             caller={mission.caller}
             duration={mission.duration}

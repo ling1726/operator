@@ -66,8 +66,8 @@ export const GameOverDialog = memo(
           </TitleBar>
           <article className={styles.article}>
             <p>
-              {"You've completed the game "}
-              {formatter.format(timeDifference, "second")}
+              Congratulations ! You have managed to keep Teams online for
+              <strong>{formatter.format(timeDifference, "second")}</strong>
             </p>
             <Button onClick={onPlayAgain}>Play Again</Button>
           </article>
