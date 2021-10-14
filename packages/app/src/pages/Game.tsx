@@ -41,6 +41,9 @@ export function Game() {
   const attendees = useSelector(gameService, gameSelectors.attendees);
   const score = useSelector(gameService, gameSelectors.score);
   const mission = useSelector(gameService, gameSelectors.mission);
+  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
+  console.log(exchanges);
+  console.log(mission);
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
@@ -48,7 +51,31 @@ export function Game() {
     number | undefined
   >();
 
-  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
+  React.useEffect(() => {
+    const listener = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('[data-displayable="true"]')) {
+        setSelectedExchange(undefined);
+        setSelectedAttendant(undefined);
+      }
+    };
+
+    document.addEventListener("click", listener);
+
+    return () => document.removeEventListener("click", listener);
+  }, [setSelectedExchange, setSelectedAttendant]);
+
+  React.useEffect(() => {
+    if (selectedExchange && selectedAttendant) {
+      console.log(gameService.state.context.socketRef.getSnapshot());
+      console.log(gameService.state.value);
+      gameService.send({
+        type: "Connect",
+        payload: { exchange: selectedExchange, attendee: selectedAttendant },
+      });
+      setSelectedAttendant(undefined);
+      setSelectedExchange(undefined);
+    }
+  }, [selectedExchange, selectedAttendant]);
 
   if (isGameOver) {
     return <Redirect to="/over" />;
@@ -65,8 +92,34 @@ export function Game() {
             callee={mission.callee}
             caller={mission.caller}
             duration={mission.duration}
-            exchange={exchanges[0].displayName}
+            exchange={mission.exchange}
           />
+        </div>
+        <Divider />
+        <div className={styles.row}>
+          {exchanges.map((exchange) => (
+            <Displayable
+              key={exchange.id}
+              id={exchange.id}
+              displayName={exchange.displayName}
+              onChange={setSelectedExchange}
+              icon={faPhone}
+              checked={selectedExchange === exchange.id}
+            />
+          ))}
+        </div>
+        <Divider />
+        <div className={styles.row}>
+          {attendees.map((attendant) => (
+            <Displayable
+              key={attendant.id}
+              id={attendant.id}
+              displayName={attendant.displayName}
+              onChange={setSelectedAttendant}
+              icon={faUser}
+              checked={selectedAttendant === attendant.id}
+            />
+          ))}
         </div>
         <Divider />
         <div className={styles.row}>

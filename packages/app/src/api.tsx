@@ -51,7 +51,7 @@ export type MissionResponse = {
   payload: Mission; 
 };
 
-export type ConnectResponse = {
+export type ConnectRequest = {
   type: "Connect";
   payload: {
     exchange: ID;
@@ -87,9 +87,8 @@ export type Response =
   | LobbyResponse
   | StartResponse
   | MissionResponse
-  | ConnectResponse
   | ScoreResponse
   | GameOverResponse
   | LaunchResponse;
 
-export type Request = RegisterRequest | ReadyRequest;
+export type Request = RegisterRequest | ReadyRequest | ConnectRequest;

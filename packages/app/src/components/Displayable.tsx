@@ -36,6 +36,8 @@ export function Displayable(props: DisplayableProps) {
   );
   return (
     <button
+      /** this data attr handles click outside to deselect */
+      data-displayable="true"
       onClick={handleClick}
       className={mergeClasses(styles.root, props.checked && styles.checked)}
     >

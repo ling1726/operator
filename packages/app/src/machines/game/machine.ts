@@ -50,7 +50,9 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
           Score: {
             actions: "assignScore",
           },
-          Connect: {},
+          Connect: {
+            actions: "requestConnect",
+          },
           GameOver: "game_over",
         },
       },
@@ -88,6 +90,15 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
       })) as AssignAction<GameContext, GameEvent>,
       requestRegister: send(
         (_, ev: Extract<GameEvent, { type: "Register" }>): SocketEvent => ({
+          type: "REQUEST",
+          payload: ev,
+        }),
+        {
+          to: (ctx) => ctx.socketRef,
+        }
+      ) as SendAction<GameContext, GameEvent, SocketEvent>,
+      requestConnect: send(
+        (_, ev: Extract<GameEvent, { type: "Connect" }>): SocketEvent => ({
           type: "REQUEST",
           payload: ev,
         }),
