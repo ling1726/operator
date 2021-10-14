@@ -34,3 +34,5 @@ export const PlayerList = memo(({ players }: PlayerListProps) => {
     </Fieldset>
   );
 });
+
+PlayerList.displayName = "PlayerList";

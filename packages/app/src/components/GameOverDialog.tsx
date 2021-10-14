@@ -46,6 +46,7 @@ export const GameOverDialog = memo(
     ...props
   }: GameOverDialogProps) => {
     const styles = useStyles();
+    const timeDifference = (endTimestamp - startTimestamp) / 1000;
     return (
       <dialog
         open={open}
@@ -66,7 +67,7 @@ export const GameOverDialog = memo(
           <article className={styles.article}>
             <p>
               {"You've completed the game "}
-              {rtf.format((endTimestamp - startTimestamp) / 1000, "second")}
+              {formatter.format(timeDifference, "second")}
             </p>
             <Button onClick={onPlayAgain}>Play Again</Button>
           </article>
@@ -76,4 +77,6 @@ export const GameOverDialog = memo(
   }
 );
 
-const rtf = new Intl.RelativeTimeFormat("en", { numeric: "always" });
+GameOverDialog.displayName = "GameOverDialog";
+
+const formatter = new Intl.RelativeTimeFormat("en", { numeric: "always" });

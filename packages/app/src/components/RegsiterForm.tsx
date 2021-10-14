@@ -58,9 +58,7 @@ export const RegisterForm = memo(
           className={mergeClasses(className, styles.form)}
         >
           <span className={styles.fieldSet}>
-            <label htmlFor="user-name-input">
-              Username
-            </label>
+            <label htmlFor="user-name-input">Username</label>
             <Input
               autoComplete="off"
               type="text"
@@ -75,3 +73,5 @@ export const RegisterForm = memo(
     );
   }
 );
+
+RegisterForm.displayName = "RegisterForm";

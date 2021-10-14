@@ -1,50 +1,74 @@
 import * as React from "react";
 import { makeStyles } from "@fluentui/react-make-styles";
 import { Awschd32402, User } from "@react95/icons";
-import { Fieldset} from '@react95/core';
-// @ts-ignore
+import { Fieldset } from "@react95/core";
 import { Progress } from "react95";
 
 const useStyles = makeStyles({
   root: {
     width: "100%",
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '30px',
+    display: "flex",
+    flexDirection: "row",
+    gap: "30px",
   },
 
   row: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
   },
 
   title: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
 });
 
 const tickDuration = 100;
 
-export function Mission(props: MissionProps) {
+export interface MissionProps {
+  name: string;
+  caller: string;
+  callee: string;
+  exchange: string;
+  duration: number;
+  onMissionTimeout: () => void;
+}
+
+export const Mission = React.memo((props: MissionProps) => {
   const { name, caller, callee, exchange, duration, onMissionTimeout } = props;
   const styles = useStyles();
 
   return (
-    <Fieldset style={{width: 300}}>
+    <Fieldset style={{ width: 300 }}>
       <div>
         <h2>{name}</h2>
-        <div className={styles.row}> <User variant="32x32_4" /> <h4>{caller}</h4></div>
-        <div className={styles.row}> <User variant="32x32_4" /> <h4>{callee}</h4></div>
-        <div className={styles.row}> <Awschd32402 variant="32x32_4" /> <h4>{exchange}</h4></div>
+        <div className={styles.row}>
+          {" "}
+          <User variant="32x32_4" /> <h4>{caller}</h4>
+        </div>
+        <div className={styles.row}>
+          {" "}
+          <User variant="32x32_4" /> <h4>{callee}</h4>
+        </div>
+        <div className={styles.row}>
+          {" "}
+          <Awschd32402 variant="32x32_4" /> <h4>{exchange}</h4>
+        </div>
       </div>
       <CountdownCircle duration={duration} onTimeout={onMissionTimeout} />
     </Fieldset>
   );
+});
+
+Mission.displayName = "Mission";
+
+interface CountDownCircleProps {
+  duration: number;
+  onTimeout: () => void;
 }
 
-function CountdownCircle(props: CountDownCircleProps) {
+const CountdownCircle = React.memo((props: CountDownCircleProps) => {
   const { duration, onTimeout } = props;
   const [progress, setProgress] = React.useState(100);
   const progressRef = React.useRef(() => {});
@@ -81,18 +105,6 @@ function CountdownCircle(props: CountDownCircleProps) {
   }, []);
 
   return <Progress value={progress} hideValue />;
-}
+});
 
-interface CountDownCircleProps {
-  duration: number;
-  onTimeout: () => void;
-}
-
-export interface MissionProps {
-  name: string;
-  caller: string;
-  callee: string;
-  exchange: string;
-  duration: number;
-  onMissionTimeout: () => void;
-}
+CountdownCircle.displayName = "CountdownCircle";

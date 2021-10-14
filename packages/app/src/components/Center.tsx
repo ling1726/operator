@@ -1,4 +1,5 @@
 import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
+import { memo } from "react";
 
 const useStyles = makeStyles({
   container: {
@@ -9,7 +10,9 @@ const useStyles = makeStyles({
   },
 });
 
-export function Center(props: JSX.IntrinsicElements["main"]) {
+export type CenterProps = JSX.IntrinsicElements["main"];
+
+export const Center = memo((props: CenterProps) => {
   const styles = useStyles();
   return (
     <main
@@ -17,4 +20,6 @@ export function Center(props: JSX.IntrinsicElements["main"]) {
       className={mergeClasses(styles.container, props.className)}
     />
   );
-}
+});
+
+Center.displayName = "Center";

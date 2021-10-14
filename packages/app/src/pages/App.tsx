@@ -4,7 +4,7 @@ import { Lobby } from "./Lobby";
 import { Landing } from "./Landing";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { useSelector } from "@xstate/react";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { useGlobalServices } from "../components/GlobalServicesProvider";
 import { authSelectors } from "../machines/auth";
 
 export const App = memo(() => (

@@ -1,15 +1,16 @@
 import { Frame, TitleBar, Button } from "@react95/core";
 import { Awschd32402 } from "@react95/icons";
 import { useSelector } from "@xstate/react";
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { Redirect } from "react-router";
 import { Center } from "../components/Center";
 import { PlayerList } from "../components/PlayerList";
 import { RegisterForm, RegisterFormData } from "../components/RegsiterForm";
 import { gameSelectors } from "../machines/game";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { useGlobalServices } from "../components/GlobalServicesProvider";
 import { makeStyles } from "@fluentui/react-make-styles";
 import { authSelectors } from "../machines/auth";
+import { useLobby } from "../hooks/useLobby";
 
 const useStyles = makeStyles({
   article: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function Lobby() {
+export const Lobby = memo(() => {
   const {
     isPlaying,
     isIdle: isRegistering,
@@ -58,32 +59,6 @@ export function Lobby() {
       </Frame>
     </Center>
   );
-}
+});
 
-function useLobby() {
-  const { gameService, authService } = useGlobalServices();
-  const isConnected = useSelector(authService, authSelectors.isConnected);
-  const isIdle = useSelector(gameService, gameSelectors.isIdle);
-  const isRegistered = useSelector(gameService, gameSelectors.isRegistered);
-  const isPlaying = useSelector(gameService, gameSelectors.isPlaying);
-  const players = useSelector(gameService, gameSelectors.players);
-  const handleSubmit = useCallback(
-    (ev: React.FormEvent<HTMLFormElement>, payload: RegisterFormData) => {
-      ev.preventDefault();
-      gameService.send({ type: "Register", payload });
-    },
-    [gameService]
-  );
-  const handleReady = useCallback(() => {
-    gameService.send({ type: "Ready", payload: {} });
-  }, []);
-  return {
-    isConnected,
-    isRegistered,
-    isPlaying,
-    isIdle,
-    players,
-    onReady: handleReady,
-    onSubmit: handleSubmit,
-  } as const;
-}
+Lobby.displayName = "Lobby";
