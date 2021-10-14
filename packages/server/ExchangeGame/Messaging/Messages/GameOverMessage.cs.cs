@@ -8,8 +8,16 @@ namespace ExchangeGame.Messaging.Messages
 {
     public class GameOverMessage: Message<GameOverMessagePayload>
     {
-        public GameOverMessage(): base(MessageTypes.GameOver) { }
+        public GameOverMessage(): base(MessageTypes.GameOver) {
+            var now = (DateTimeOffset)DateTime.UtcNow;
+            Payload = new GameOverMessagePayload
+            {
+                Timestamp = now.ToUnixTimeMilliseconds(),
+            };
+        }
     }
 
-    public class GameOverMessagePayload { }
+    public class GameOverMessagePayload {
+        public long Timestamp { get; set; }
+    }
 }
