@@ -5,16 +5,16 @@ import { App } from "./pages/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { BrowserRouter } from "react-router-dom";
 import CSSBaseline from "@mui/material/CssBaseline";
-import { AuthProvider } from "./machines/auth";
+import { GlobalServicesProvider } from "./machines/GlobalServicesProvider";
 
 ReactDOM.render(
   <React.StrictMode>
     <CSSBaseline />
     <FluentProvider theme={webLightTheme}>
       <BrowserRouter>
-        <AuthProvider>
+        <GlobalServicesProvider>
           <App />
-        </AuthProvider>
+        </GlobalServicesProvider>
       </BrowserRouter>
     </FluentProvider>
   </React.StrictMode>,

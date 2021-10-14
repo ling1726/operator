@@ -4,14 +4,15 @@ import React, { useCallback } from "react";
 import { Redirect } from "react-router";
 import { Center } from "../components/Center";
 import { RegisterForm, RegisterFormData } from "../components/RegsiterForm";
-import { gameSelector, useGameService } from "../machines/game";
+import { gameSelectors } from "../machines/game";
+import { useGlobalServices } from "../machines/GlobalServicesProvider";
 
 export function Lobby() {
-  const gameService = useGameService();
-  const isIdle = useSelector(gameService, gameSelector.isIdle);
-  const isRegistered = useSelector(gameService, gameSelector.isRegistered);
-  const isPlaying = useSelector(gameService, gameSelector.isPlaying);
-  const players = useSelector(gameService, gameSelector.players);
+  const { gameService } = useGlobalServices();
+  const isIdle = useSelector(gameService, gameSelectors.isIdle);
+  const isRegistered = useSelector(gameService, gameSelectors.isRegistered);
+  const isPlaying = useSelector(gameService, gameSelectors.isPlaying);
+  const players = useSelector(gameService, gameSelectors.players);
   const handleSubmit = useCallback(
     (ev: React.FormEvent<HTMLFormElement>, payload: RegisterFormData) => {
       ev.preventDefault();

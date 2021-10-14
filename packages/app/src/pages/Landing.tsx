@@ -1,12 +1,25 @@
 import * as React from "react";
 import { LaunchForm, LaunchFormData } from "../components/LaunchForm";
 import { Center } from "../components/Center";
-import { useSelector } from "@xstate/react";
-import { authSelector, useAuthService } from "../machines/auth";
+import { useActor, useSelector } from "@xstate/react";
+import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { Redirect } from "react-router";
+import { gameSelectors } from "../machines/game";
+import { socketSelectors } from "../machines/socket";
+import { authSelectors } from "../machines/auth";
 
 export function Landing() {
-  const authService = useAuthService();
-  const isConnecting = useSelector(authService, authSelector.isConnecting);
+  const { authService, gameService } = useGlobalServices();
+  const socketRef = useSelector(gameService, gameSelectors.socketRef);
+  const socketURL = useSelector(authService, authSelectors.socketURL);
+  const isConnecting = useSelector(authService, authSelectors.isConnecting);
+  const isConnected = useSelector(authService, authSelectors.isConnected);
+  const isOpen = useSelector(socketRef, (state) => {
+    return state.matches("available.open");
+  });
+  const isSocketConnecting = useSelector(socketRef, (state) =>
+    state.matches("available.connecting")
+  );
   const handleSubmit = React.useCallback(
     (
       ev: React.FormEvent<HTMLFormElement>,
@@ -21,9 +34,22 @@ export function Landing() {
     [authService]
   );
 
+  React.useEffect(() => {
+    if (isConnected && socketURL) {
+      socketRef.send({
+        type: "CONNECT",
+        payload: { url: socketURL },
+      });
+    }
+  }, [isConnected, socketRef, socketURL]);
+
+  if (isOpen) return <Redirect to="/lobby" />;
   return (
     <Center>
-      <LaunchForm loading={isConnecting} onSubmit={handleSubmit} />
+      <LaunchForm
+        loading={isConnecting || isSocketConnecting}
+        onSubmit={handleSubmit}
+      />
     </Center>
   );
 }

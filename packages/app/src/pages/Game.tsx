@@ -5,9 +5,10 @@ import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
 import { Scorebar } from "../components/Scorebar";
 import { Mission } from "../components/Mission";
-import { gameSelector, useGameService } from "../machines/game";
 import { useSelector } from "@xstate/react";
 import { Redirect } from "react-router";
+import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { gameSelectors } from "../machines/game";
 
 const useStyles = makeStyles({
   grid: {
@@ -25,18 +26,17 @@ const useStyles = makeStyles({
     display: "flex",
     flexWrap: "wrap",
     gap: "1rem",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
-
 });
 
 export function Game() {
   const styles = useStyles();
-  const gameService = useGameService();
-  const exchanges = useSelector(gameService, gameSelector.exchanges);
-  const attendees = useSelector(gameService, gameSelector.attendees);
-  const score = useSelector(gameService, gameSelector.score);
-  const mission = useSelector(gameService, gameSelector.mission);
+  const { gameService } = useGlobalServices();
+  const exchanges = useSelector(gameService, gameSelectors.exchanges);
+  const attendees = useSelector(gameService, gameSelectors.attendees);
+  const score = useSelector(gameService, gameSelectors.score);
+  const mission = useSelector(gameService, gameSelectors.mission);
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
@@ -44,17 +44,18 @@ export function Game() {
     number | undefined
   >();
 
+  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
 
-  const isGameOver = useSelector(gameService, gameSelector.isGameOver);
-
-  if (isGameOver) { return <Redirect to="/over" /> }
+  if (isGameOver) {
+    return <Redirect to="/over" />;
+  }
 
   return (
     <div className={styles.grid}>
       <div className={styles.row}>
         <Mission
           key={mission.id}
-          onMissionTimeout={() => console.log('mission over')}
+          onMissionTimeout={() => console.log("mission over")}
           name={mission.name}
           callee={mission.callee}
           caller={mission.caller}
