@@ -39,7 +39,7 @@ export const authMachine = createMachine<AuthContext, AuthEvent, AuthTypestate>(
       ) as AssignAction<AuthContext, AuthEvent>,
     },
     services: {
-      connect: async () => import.meta.env.VITE_WS_HOST,
+      connect: async () =>  { console.log(import.meta.env.VITE_WS_HOST); return import.meta.env.VITE_WS_HOST },
     },
   }
 );

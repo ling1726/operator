@@ -21,7 +21,7 @@ export default class Call {
     this.id = generateId();
     this.sender = sender;
     this.recipient = recipient;
-    this.duration = getRandomInt(15, 30);
+    this.duration = getRandomInt(10000, 20000);
     sender.inCall = true;
     recipient.inCall = true;
 

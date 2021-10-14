@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   },
 });
 
-const tickDuration = 100;
+const tickProgress = 0.05;
 
 export interface MissionProps {
   name: string;
@@ -72,10 +72,7 @@ const CountdownCircle = React.memo((props: CountDownCircleProps) => {
   const { duration, onTimeout } = props;
   const [progress, setProgress] = React.useState(100);
   const progressRef = React.useRef(() => {});
-  const tickProgress = React.useMemo(
-    () => Math.floor((tickDuration / duration) * 100),
-    [tickDuration, duration]
-  );
+  const tickDuration = React.useMemo(() => Math.floor(0.05*duration), [duration]);
 
   React.useEffect(() => {
     progressRef.current = () => {
@@ -93,7 +90,7 @@ const CountdownCircle = React.memo((props: CountDownCircleProps) => {
           return 0;
         }
 
-        return progress - tickProgress;
+        return progress - (tickProgress*100);
       });
     };
   }, []);
