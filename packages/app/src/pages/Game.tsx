@@ -37,6 +37,7 @@ export function Game() {
   const attendees = useSelector(gameService, gameSelectors.attendees);
   const score = useSelector(gameService, gameSelectors.score);
   const mission = useSelector(gameService, gameSelectors.mission);
+  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
@@ -44,7 +45,28 @@ export function Game() {
     number | undefined
   >();
 
-  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
+  React.useEffect(() => {
+    const listener = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('[data-displayable="true"]')) {
+        setSelectedExchange(undefined);
+        setSelectedAttendant(undefined);
+      }
+    }
+
+    document.addEventListener('click', listener);
+
+    return () => document.removeEventListener('click', listener);
+  }, [setSelectedExchange, setSelectedAttendant]);
+
+  React.useEffect(() => {
+    if (selectedExchange && selectedAttendant) {
+      console.log(gameService.state.context.socketRef.getSnapshot());
+      console.log(gameService.state.value);
+      gameService.send({ type: 'Connect', payload: { exchange: selectedExchange, attendee: selectedAttendant } });
+      setSelectedAttendant(undefined);
+      setSelectedExchange(undefined);
+    }
+  }, [selectedExchange, selectedAttendant]);
 
   if (isGameOver) {
     return <Redirect to="/over" />;
