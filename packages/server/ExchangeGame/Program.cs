@@ -9,7 +9,7 @@ namespace ExchangeGame
 {
     class Program
     {
-        private static string _Hostname = "localhost";
+        private static string _Hostname = "127.0.0.1";
         private static int _Port = 8080;
 
         private static ConcurrentQueue<(string messageStr, string ipPort)> messageQueue = new ConcurrentQueue<(string messageStr, string ipPort)>();
@@ -42,6 +42,13 @@ namespace ExchangeGame
                     {
                         var message = JsonHelpers.DeserializeMessage(entry.messageStr);
                         handler.HandleMessage(message, entry.ipPort);
+                    }
+
+                    if (game.GameOver)
+                    {
+                        messageQueue.Clear();
+                        game = new Game();
+                        game.server = wss;
                     }
                 }
             }
