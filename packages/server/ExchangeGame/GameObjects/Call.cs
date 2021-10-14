@@ -26,7 +26,7 @@ namespace ExchangeGame
         public OnTimeoutDel OnTimeout;
 
         // TODO configure this
-        public int Score { get; set; } = 0;
+        public int Score { get; set; } = 10;
 
         private const int START_DELAY = 500;
 
