@@ -3,12 +3,9 @@ import { makeStyles, mergeClasses } from "@fluentui/react-components";
 const useStyles = makeStyles({
   container: {
     height: "100vh",
-    maxWidth: "1200px",
     display: "flex",
-    flexDirection: "column",
-    margin: '0 auto',
     justifyContent: "center",
-    // alignItems: "center",
+    alignItems: "center",
   },
 });
 

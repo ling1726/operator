@@ -1,36 +1,77 @@
-import { Label, Button } from "@fluentui/react-components";
-import React from "react";
+import { Label, makeStyles, mergeClasses } from "@fluentui/react-components";
+import { Button, Input, Frame, TitleBar } from "@react95/core";
+import { Awschd32402 } from "@react95/icons";
+import { memo, useCallback } from "react";
 
 export interface RegisterFormData {
   username: string;
 }
 
-export interface RegisterFormProps {
+export type RegisterFormProps = Omit<
+  JSX.IntrinsicElements["form"],
+  "onSubmit"
+> & {
   onSubmit?(ev: React.FormEvent<HTMLFormElement>, data: RegisterFormData): void;
-}
+};
 
-export function RegisterForm(props: RegisterFormProps) {
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    const usernameInput = ev.currentTarget.elements.namedItem(
-      "user-name"
-    ) as HTMLInputElement;
-    props.onSubmit?.(ev, { username: usernameInput.value });
-  };
-  return (
-    <form onSubmit={handleSubmit}>
-      <Label size="large" htmlFor="user-name-input" required>
-        Username
-      </Label>
-      <input
-        autoComplete="off"
-        type="text"
-        name="user-name"
-        id="user-name-input"
-        required
-      />
-      <Button type="submit" appearance="primary">
-        Register
-      </Button>
-    </form>
-  );
-}
+const useStyles = makeStyles({
+  fieldSet: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  form: {
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+    alignItems: "flex-end",
+  },
+});
+
+export const RegisterForm = memo(
+  ({ onSubmit, className, ...rest }: RegisterFormProps) => {
+    const handleSubmit = useCallback(
+      (ev: React.FormEvent<HTMLFormElement>) => {
+        const usernameInput = ev.currentTarget.elements.namedItem(
+          "user-name"
+        ) as HTMLInputElement;
+        onSubmit?.(ev, { username: usernameInput.value });
+      },
+      [onSubmit]
+    );
+    const styles = useStyles();
+    return (
+      <Frame>
+        <TitleBar
+          active
+          icon={<Awschd32402 variant="32x32_4" />}
+          title="Register"
+        >
+          <TitleBar.OptionsBox>
+            <TitleBar.Option>?</TitleBar.Option>
+            <TitleBar.Option>X</TitleBar.Option>
+          </TitleBar.OptionsBox>
+        </TitleBar>
+        <form
+          {...rest}
+          onSubmit={handleSubmit}
+          className={mergeClasses(className, styles.form)}
+        >
+          <span className={styles.fieldSet}>
+            <Label size="medium" htmlFor="user-name-input" required>
+              Username
+            </Label>
+            <Input
+              autoComplete="off"
+              type="text"
+              name="user-name"
+              id="user-name-input"
+              required
+            />
+          </span>
+          <Button type="submit">Register</Button>
+        </form>
+      </Frame>
+    );
+  }
+);

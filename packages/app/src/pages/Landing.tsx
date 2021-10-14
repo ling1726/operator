@@ -9,19 +9,20 @@ import { Awschd32402 } from "@react95/icons";
 
 const useStyles = makeStyles({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "2rem",
+    // display: "flex",
+    // flexDirection: "column",
+    // alignItems: "center",
+    // justifyContent: "center",
+    // gap: "2rem",
     maxWidth: "350px",
-    margin: "auto",
+    // margin: "auto",
   },
-  title: (theme) => ({
-    fontFamily: theme.fontFamilyBase,
-    fontSize: theme.fontSizeHero1000,
-    fontWeight: theme.fontWeightSemibold,
-  }),
+  frame: {
+    padding: "0 20px 20px 20px",
+  },
+  titleBar: {
+    width: "100%",
+  },
   paragraph: (theme) => ({
     textAlign: "justify",
     textJustify: "inter-word",
@@ -37,20 +38,19 @@ export const Landing = memo(() => {
   if (redirect) return <Redirect to="/lobby" />;
   return (
     <Center>
-      <Frame>
+      <Frame className={styles.root}>
         <TitleBar
           active
           icon={<Awschd32402 variant="32x32_4" />}
           title="Operator"
-          className="draggable"
+          className={styles.titleBar}
         >
           <TitleBar.OptionsBox>
             <TitleBar.Option>?</TitleBar.Option>
             <TitleBar.Option>X</TitleBar.Option>
           </TitleBar.OptionsBox>
         </TitleBar>
-        <article className={styles.root}>
-          <h1 className={styles.title}>Operator</h1>
+        <article className={styles.frame}>
           <p className={styles.paragraph}>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem quasi
             in rerum neque ut optio voluptates inventore quaerat nulla odio
