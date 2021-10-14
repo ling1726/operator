@@ -89,3 +89,5 @@ export const Landing = memo(() => {
     </>
   );
 });
+
+Landing.displayName = "Landing";

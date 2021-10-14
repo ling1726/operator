@@ -1,17 +1,14 @@
 import * as React from "react";
 import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 import { Displayable } from "../components/Displayable";
-import { Scorebar } from "../components/Scorebar";
+import { ScoreBar } from "../components/ScoreBar";
 import { Mission } from "../components/Mission";
-import { useSelector } from "@xstate/react";
 import { Redirect } from "react-router";
-import { useGlobalServices } from "../components/GlobalServicesProvider";
-import { gameSelectors } from "../machines/game";
-import { Awschd32402, User } from "@react95/icons";
+import { Awschd32402 } from "@react95/icons";
 import { Frame, TitleBar } from "@react95/core";
-// @ts-ignore
 import { Divider, Avatar } from "react95";
 import { Center } from "../components/Center";
+import { useGame } from "../hooks/useGame";
 
 const useStyles = makeStyles({
   grid: {
@@ -40,47 +37,19 @@ const useStyles = makeStyles({
   },
 });
 
-export function Game() {
+export const Game = React.memo(() => {
   const styles = useStyles();
-  const { gameService } = useGlobalServices();
-  const exchanges = useSelector(gameService, gameSelectors.exchanges);
-  const attendees = useSelector(gameService, gameSelectors.attendees);
-  const score = useSelector(gameService, gameSelectors.score);
-  const mission = useSelector(gameService, gameSelectors.mission);
-  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
-  console.log("rerender");
-  const [selectedExchange, setSelectedExchange] = React.useState<
-    number | undefined
-  >();
-  const [selectedAttendant, setSelectedAttendant] = React.useState<
-    number | undefined
-  >();
-
-  React.useEffect(() => {
-    const listener = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest('[data-displayable="true"]')) {
-        setSelectedExchange(undefined);
-        setSelectedAttendant(undefined);
-      }
-    };
-
-    document.addEventListener("click", listener);
-
-    return () => document.removeEventListener("click", listener);
-  }, [setSelectedExchange, setSelectedAttendant]);
-
-  React.useEffect(() => {
-    if (selectedExchange && selectedAttendant) {
-      console.log(gameService.state.context.socketRef.getSnapshot());
-      console.log(gameService.state.value);
-      gameService.send({
-        type: "Connect",
-        payload: { exchange: selectedExchange, attendee: selectedAttendant },
-      });
-      setSelectedAttendant(undefined);
-      setSelectedExchange(undefined);
-    }
-  }, [selectedExchange, selectedAttendant]);
+  const {
+    isGameOver,
+    mission,
+    score,
+    exchanges,
+    attendees,
+    selectedAttendant,
+    selectedExchange,
+    setSelectedAttendant,
+    setSelectedExchange,
+  } = useGame();
 
   if (isGameOver) return <Redirect to="/" />;
 
@@ -138,10 +107,12 @@ export function Game() {
                 </Displayable>
               ))}
             </div>
-            <Scorebar score={score} />
+            <ScoreBar score={score} />
           </div>
         </div>
       </Frame>
     </Center>
   );
-}
+});
+
+Game.displayName = "Game";

@@ -30,6 +30,8 @@ export const GlobalServicesProvider = memo((props) => {
   return <GlobalServicesContext.Provider {...props} value={value} />;
 });
 
+GlobalServicesProvider.displayName = "GlobalServicesProvider";
+
 export function useGlobalServices() {
   const globalServices = useContext(GlobalServicesContext);
   if (!globalServices) {

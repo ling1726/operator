@@ -7,15 +7,15 @@ const useStyles = makeStyles({
     width: "100px",
     border: "none",
     display: "flex",
-    flexDirection: 'column',
-    gap: '5px',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "column",
+    gap: "5px",
+    alignItems: "center",
+    justifyContent: "center",
     cursor: "pointer",
     background: "none",
   },
   checked: {
-    border: '1px solid red',
+    border: "1px solid red",
   },
 });
 
@@ -27,7 +27,7 @@ export interface DisplayableProps {
   children: React.ReactNode;
 }
 
-export function Displayable(props: DisplayableProps) {
+export const Displayable = React.memo((props: DisplayableProps) => {
   const styles = useStyles();
   const handleClick = React.useCallback(
     () => props.onChange(props.id),
@@ -40,9 +40,10 @@ export function Displayable(props: DisplayableProps) {
       onClick={handleClick}
       className={mergeClasses(styles.root, props.checked && styles.checked)}
     >
-
       {props.children}
-      <h4 style={{ margin: 0}}>{props.displayName}</h4>
+      <h4 style={{ margin: 0 }}>{props.displayName}</h4>
     </button>
   );
-}
+});
+
+Displayable.displayName = "Displayable";

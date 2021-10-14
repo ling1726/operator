@@ -8,8 +8,6 @@ import { GlobalServicesProvider } from "./components/GlobalServicesProvider";
 import { ThemeProvider } from "@react95/core";
 import { ThemeProvider as SCThemeProvider } from "styled-components";
 
-// pick a theme of your choice
-// @ts-ignore
 import original from "react95/dist/themes/original";
 import { GlobalStyles } from "./components/GlobalStyles";
 

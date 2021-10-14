@@ -35,64 +35,66 @@ export interface LaunchFormProps {
   loading?: boolean;
 }
 
-export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
-  const styles = useStyles();
+export const LaunchForm = React.memo(
+  ({ onSubmit, loading = false }: LaunchFormProps) => {
+    const styles = useStyles();
 
-  const formRef = React.useRef<HTMLFormElement>(null);
-  const typeRef = React.useRef<LaunchFormData["type"]>();
+    const formRef = React.useRef<HTMLFormElement>(null);
+    const typeRef = React.useRef<LaunchFormData["type"]>();
 
-  const handleSubmit = React.useCallback(
-    async (ev: React.FormEvent<HTMLFormElement>) => {
-      ev.preventDefault();
-      const serverInput = ev.currentTarget.elements.namedItem(
-        "server"
-      ) as HTMLInputElement;
-      const userNameInput = ev.currentTarget.elements.namedItem(
-        "user-name"
-      ) as HTMLInputElement;
+    const handleSubmit = React.useCallback(
+      async (ev: React.FormEvent<HTMLFormElement>) => {
+        ev.preventDefault();
+        const serverInput = ev.currentTarget.elements.namedItem(
+          "server"
+        ) as HTMLInputElement;
+        const userNameInput = ev.currentTarget.elements.namedItem(
+          "user-name"
+        ) as HTMLInputElement;
 
-      if (onSubmit && typeRef.current) {
-        onSubmit(ev, {
-          serverName: serverInput.value,
-          type: typeRef.current,
-        });
-        formRef.current?.reset();
-        typeRef.current = undefined;
-      }
-    },
-    [onSubmit]
-  );
+        if (onSubmit && typeRef.current) {
+          onSubmit(ev, {
+            serverName: serverInput.value,
+            type: typeRef.current,
+          });
+          formRef.current?.reset();
+          typeRef.current = undefined;
+        }
+      },
+      [onSubmit]
+    );
 
-  const requestJoin = React.useCallback(() => {
-    typeRef.current = "join";
-    formRef.current?.requestSubmit();
-  }, []);
-  const requestHost = React.useCallback(() => {
-    typeRef.current = "host";
-    formRef.current?.requestSubmit();
-  }, []);
+    const requestJoin = React.useCallback(() => {
+      typeRef.current = "join";
+      formRef.current?.requestSubmit();
+    }, []);
+    const requestHost = React.useCallback(() => {
+      typeRef.current = "host";
+      formRef.current?.requestSubmit();
+    }, []);
 
-  return (
-    <form ref={formRef} onSubmit={handleSubmit} className={styles.root}>
-      <span className={mergeClasses(styles.input, styles.server)}>
-        <label htmlFor="server-input">
-          Server
-        </label>
-        <Input
-          disabled={loading}
-          autoComplete="off"
-          type="text"
-          name="server"
-          id="server-input"
-          required
-        />
-      </span>
-      <Button disabled={loading} onClick={requestJoin} type="button">
-        Join
-      </Button>
-      <Button disabled={loading} onClick={requestHost} type="button">
-        Host
-      </Button>
-    </form>
-  );
-}
+    return (
+      <form ref={formRef} onSubmit={handleSubmit} className={styles.root}>
+        <span className={mergeClasses(styles.input, styles.server)}>
+          <label htmlFor="server-input">Server</label>
+          <Input
+            disabled={loading}
+            autoComplete="off"
+            type="text"
+            name="server"
+            id="server-input"
+            required
+          />
+        </span>
+        <Button disabled={loading} onClick={requestJoin} type="button">
+          Join
+        </Button>
+        <Button disabled={loading} onClick={requestHost} type="button">
+          Host
+        </Button>
+      </form>
+    );
+  }
+);
+
+LaunchForm.displayName = "LaunchForm";
