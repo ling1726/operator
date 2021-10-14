@@ -1,7 +1,7 @@
 import * as React from "react";
 import { makeStyles } from "@fluentui/react-make-styles";
 import { Awschd32402, User } from "@react95/icons";
-import { Fieldset } from '@react95/core';
+import { Fieldset} from '@react95/core';
 // @ts-ignore
 import { Progress } from "react95";
 
@@ -32,7 +32,7 @@ export function Mission(props: MissionProps) {
   const styles = useStyles();
 
   return (
-    <Fieldset>
+    <Fieldset style={{width: 300}}>
       <div>
         <h2>{name}</h2>
         <div className={styles.row}> <User variant="32x32_4" /> <h4>{caller}</h4></div>

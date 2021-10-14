@@ -48,8 +48,7 @@ export function Game() {
   const score = useSelector(gameService, gameSelectors.score);
   const mission = useSelector(gameService, gameSelectors.mission);
   const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
-  console.log(exchanges);
-  console.log(mission);
+  console.log("rerender");
   const [selectedExchange, setSelectedExchange] = React.useState<
     number | undefined
   >();
