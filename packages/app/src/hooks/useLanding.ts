@@ -1,6 +1,6 @@
 import { LaunchFormData } from "../components/LaunchForm";
 import { useSelector } from "@xstate/react";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { useGlobalServices } from "../components/GlobalServicesProvider";
 import { gameSelectors } from "../machines/game";
 import { socketSelectors } from "../machines/socket";
 import { authSelectors } from "../machines/auth";

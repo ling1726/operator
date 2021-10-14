@@ -7,7 +7,7 @@ import { Center } from "../components/Center";
 import { PlayerList } from "../components/PlayerList";
 import { RegisterForm, RegisterFormData } from "../components/RegsiterForm";
 import { gameSelectors } from "../machines/game";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { useGlobalServices } from "../components/GlobalServicesProvider";
 import { makeStyles } from "@fluentui/react-make-styles";
 import { authSelectors } from "../machines/auth";
 

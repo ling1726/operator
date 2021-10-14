@@ -1,8 +1,8 @@
 import { useInterpret, useSelector } from "@xstate/react";
 import { createContext, memo, useContext, useEffect, useMemo } from "react";
-import { authMachine, AuthService } from "./auth";
-import { gameMachine, gameSelectors, GameService } from "./game";
-import { socketMachine, socketSelectors, SocketService } from "./socket";
+import { authMachine, AuthService } from "../machines/auth";
+import { gameMachine, gameSelectors, GameService } from "../machines/game";
+import { socketSelectors } from "../machines/socket";
 
 export interface GlobalServicesContextValue {
   authService: AuthService;

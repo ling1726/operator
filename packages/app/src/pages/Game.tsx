@@ -5,7 +5,7 @@ import { Scorebar } from "../components/Scorebar";
 import { Mission } from "../components/Mission";
 import { useSelector } from "@xstate/react";
 import { Redirect } from "react-router";
-import { useGlobalServices } from "../machines/GlobalServicesProvider";
+import { useGlobalServices } from "../components/GlobalServicesProvider";
 import { gameSelectors } from "../machines/game";
 import { Awschd32402, User } from "@react95/icons";
 import { Frame, TitleBar } from "@react95/core";
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     flexDirection: "column",
   },
   rowExchanges: {
-    gap: '50px',
+    gap: "50px",
   },
 
   row: {

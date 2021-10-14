@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { App } from "./pages/App";
 import { BrowserRouter } from "react-router-dom";
-import { GlobalServicesProvider } from "./machines/GlobalServicesProvider";
+import { GlobalServicesProvider } from "./components/GlobalServicesProvider";
 import { ThemeProvider } from "@react95/core";
 import { ThemeProvider as SCThemeProvider } from "styled-components";
 
