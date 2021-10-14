@@ -1,4 +1,5 @@
 import { Label, Button } from "@fluentui/react-components";
+import { Card } from "@fluentui/react-card";
 import { useSelector } from "@xstate/react";
 import React, { useCallback } from "react";
 import { Redirect } from "react-router";
@@ -8,25 +9,18 @@ import { gameSelectors } from "../machines/game";
 import { useGlobalServices } from "../machines/GlobalServicesProvider";
 
 export function Lobby() {
-  const { gameService } = useGlobalServices();
-  const isIdle = useSelector(gameService, gameSelectors.isIdle);
-  const isRegistered = useSelector(gameService, gameSelectors.isRegistered);
-  const isPlaying = useSelector(gameService, gameSelectors.isPlaying);
-  const players = useSelector(gameService, gameSelectors.players);
-  const handleSubmit = useCallback(
-    (ev: React.FormEvent<HTMLFormElement>, payload: RegisterFormData) => {
-      ev.preventDefault();
-      gameService.send({ type: "Register", payload });
-    },
-    [gameService]
-  );
-  const handleReady = useCallback(() => {
-    gameService.send({ type: "Ready", payload: {} });
-  }, []);
+  const { isPlaying, isIdle, isRegistered, players, onReady, onSubmit } = {
+    isPlaying: false,
+    isIdle: false,
+    isRegistered: false,
+    players: [],
+    onReady: () => {},
+    onSubmit: () => {},
+  } as ReturnType<typeof useLobby>;
   if (isPlaying) return <Redirect to="/game" />;
   return (
     <Center>
-      {isIdle && <RegisterForm onSubmit={handleSubmit} />}
+      {isIdle && <RegisterForm onSubmit={onSubmit} />}
       {Boolean(players.length) && (
         <div>
           <Label strong size="large">
@@ -42,10 +36,36 @@ export function Lobby() {
         </div>
       )}
       {isRegistered && (
-        <Button onClick={handleReady} appearance="primary">
+        <Button onClick={onReady} appearance="primary">
           Ready
         </Button>
       )}
     </Center>
   );
+}
+
+function useLobby() {
+  const { gameService } = useGlobalServices();
+  const isIdle = useSelector(gameService, gameSelectors.isIdle);
+  const isRegistered = useSelector(gameService, gameSelectors.isRegistered);
+  const isPlaying = useSelector(gameService, gameSelectors.isPlaying);
+  const players = useSelector(gameService, gameSelectors.players);
+  const handleSubmit = useCallback(
+    (ev: React.FormEvent<HTMLFormElement>, payload: RegisterFormData) => {
+      ev.preventDefault();
+      gameService.send({ type: "Register", payload });
+    },
+    [gameService]
+  );
+  const handleReady = useCallback(() => {
+    gameService.send({ type: "Ready", payload: {} });
+  }, []);
+  return {
+    isRegistered,
+    isPlaying,
+    isIdle,
+    players,
+    onReady: handleReady,
+    onSubmit: handleSubmit,
+  } as const;
 }

@@ -19,6 +19,9 @@ export function useLanding() {
   const isSocketConnecting = useSelector(socketRef, (state) =>
     socketSelectors.isConnecting(state)
   );
+  const isUnavailable = useSelector(socketRef, (state) =>
+    socketSelectors.isUnavailable(state)
+  );
   const handleSubmit = useCallback(
     (
       ev: React.FormEvent<HTMLFormElement>,
@@ -32,6 +35,12 @@ export function useLanding() {
     },
     [authService]
   );
+
+  useEffect(() => {
+    if (isUnavailable) {
+      authService.send("DISCONNECT");
+    }
+  }, [isUnavailable]);
 
   useEffect(() => {
     if (isConnected && socketURL) {
