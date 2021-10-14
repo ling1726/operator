@@ -43,12 +43,13 @@ export type StartResponse = {
     exchanges: Exchange[];
     attendees: Attendee[];
     score: number;
+    timestamp: number;
   };
 };
 
 export type MissionResponse = {
   type: "Mission";
-  payload: Mission; 
+  payload: Mission;
 };
 
 export type ConnectRequest = {
@@ -68,7 +69,10 @@ export type ScoreResponse = {
   };
 };
 
-export type GameOverResponse = { type: "GameOver"; payload: void };
+export type GameOverResponse = {
+  type: "GameOver";
+  payload: { timestamp: number };
+};
 
 export type LaunchResponse = {
   type: "Launch";
