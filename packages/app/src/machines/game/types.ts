@@ -8,7 +8,7 @@ export type GameEvent =
   | api.ReadyRequest
   | api.StartResponse
   | api.MissionResponse
-  | api.ConnectResponse
+  | api.ConnectRequest
   | api.ScoreResponse
   | api.GameOverResponse
   | {
@@ -24,6 +24,8 @@ export interface GameContext {
   attendees: api.Attendee[];
   score: number;
   mission: api.Mission;
+  startTimestamp: number;
+  endTimestamp: number;
 }
 
 export type GameTypestate =

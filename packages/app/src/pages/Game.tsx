@@ -10,7 +10,7 @@ import { gameSelectors } from "../machines/game";
 import { Awschd32402, User } from "@react95/icons";
 import { Frame, TitleBar } from "@react95/core";
 // @ts-ignore
-import { Divider, Avatar } from 'react95';
+import { Divider, Avatar } from "react95";
 import { Center } from "../components/Center";
 
 const useStyles = makeStyles({
@@ -83,9 +83,7 @@ export function Game() {
     }
   }, [selectedExchange, selectedAttendant]);
 
-  if (isGameOver) {
-    return <Redirect to="/over" />;
-  }
+  if (isGameOver) return <Redirect to="/" />;
 
   return (
     <Center className={styles.container}>
@@ -101,7 +99,7 @@ export function Game() {
             <TitleBar.Option>X</TitleBar.Option>
           </TitleBar.OptionsBox>
         </TitleBar>
-        <div style={{ display: "flex", padding: '10px' }}>
+        <div style={{ display: "flex", padding: "10px" }}>
           <Mission
             key={mission.id}
             onMissionTimeout={() => console.log("mission over")}
@@ -125,7 +123,7 @@ export function Game() {
                 </Displayable>
               ))}
             </div>
-            <Divider style={{margin: '10px 0 10px 0'}} />
+            <Divider style={{ margin: "10px 0 10px 0" }} />
             <div className={styles.row}>
               {attendees.map((attendant) => (
                 <Displayable
@@ -135,7 +133,9 @@ export function Game() {
                   onChange={setSelectedAttendant}
                   checked={selectedAttendant === attendant.id}
                 >
-                  <Avatar src={`https://avatars.dicebear.com/api/pixel-art/${attendant.id}.svg`} />
+                  <Avatar
+                    src={`https://avatars.dicebear.com/api/pixel-art/${attendant.id}.svg`}
+                  />
                 </Displayable>
               ))}
             </div>

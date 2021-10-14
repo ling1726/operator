@@ -38,7 +38,12 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
           },
           Start: {
             target: "playing",
-            actions: ["assignExchanges", "assignAttendees", "assignScore"],
+            actions: [
+              "assignExchanges",
+              "assignAttendees",
+              "assignScore",
+              "assignStartTimestamp",
+            ],
           },
         },
       },
@@ -53,7 +58,10 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
           Connect: {
             actions: "requestConnect",
           },
-          GameOver: "game_over",
+          GameOver: {
+            target: "game_over",
+            actions: "assignEndTimestamp",
+          },
         },
       },
       game_over: {
@@ -73,6 +81,12 @@ export const gameMachine = createMachine<GameContext, GameEvent, GameTypestate>(
         }),
         { to: "socket" }
       ) as SendAction<GameContext, GameEvent, SocketEvent>,
+      assignEndTimestamp: assign((_, ev: api.GameOverResponse) => ({
+        endTimestamp: ev.payload.timestamp,
+      })) as AssignAction<GameContext, GameEvent>,
+      assignStartTimestamp: assign((_, ev: api.StartResponse) => ({
+        startTimestamp: ev.payload.timestamp,
+      })) as AssignAction<GameContext, GameEvent>,
       assignExchanges: assign((_, ev: api.StartResponse) => ({
         exchanges: ev.payload.exchanges,
       })) as AssignAction<GameContext, GameEvent>,

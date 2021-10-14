@@ -1,5 +1,4 @@
-import { LaunchForm, LaunchFormData } from "../components/LaunchForm";
-import { Center } from "../components/Center";
+import { LaunchFormData } from "../components/LaunchForm";
 import { useSelector } from "@xstate/react";
 import { useGlobalServices } from "../machines/GlobalServicesProvider";
 import { gameSelectors } from "../machines/game";
@@ -9,6 +8,9 @@ import { useCallback, useEffect } from "react";
 
 export function useLanding() {
   const { authService, gameService } = useGlobalServices();
+  const isGameOver = useSelector(gameService, gameSelectors.isGameOver);
+  const startTimestamp = useSelector(gameService, gameSelectors.startTimestamp);
+  const endTimestamp = useSelector(gameService, gameSelectors.endTimestamp);
   const socketRef = useSelector(gameService, gameSelectors.socketRef);
   const socketURL = useSelector(authService, authSelectors.socketURL);
   const isConnecting = useSelector(authService, authSelectors.isConnecting);
@@ -36,6 +38,10 @@ export function useLanding() {
     [authService]
   );
 
+  const handlePlayAgain = useCallback(() => {
+    location.reload();
+  }, []);
+
   useEffect(() => {
     if (isUnavailable) {
       authService.send("DISCONNECT");
@@ -50,10 +56,13 @@ export function useLanding() {
       });
     }
   }, [isConnected, socketRef, socketURL]);
-
   return {
     loading: isConnecting || isSocketConnecting,
-    redirect: isOpen,
+    goToLobby: isOpen,
+    isGameOver,
+    startTimestamp,
+    endTimestamp,
     onSubmit: handleSubmit,
+    onPlayAgain: handlePlayAgain,
   } as const;
 }

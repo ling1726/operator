@@ -15,6 +15,8 @@ export const gameSelectors = {
   attendees: (state: GameState) => state.context.attendees,
   // BE score starts from 0
   score: (state: GameState) => 100 - state.context.score,
+  startTimestamp: (state: GameState) => state.context.startTimestamp,
+  endTimestamp: (state: GameState) => state.context.endTimestamp,
   mission: (state: GameState) => {
     const exchangeName = state.context.exchanges.find(
       (x) => x.id === state.context.mission?.exchange
