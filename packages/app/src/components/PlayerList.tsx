@@ -1,4 +1,4 @@
-import { Label, makeStyles } from "@fluentui/react-components";
+import { makeStyles } from "@fluentui/react-make-styles";
 import { Frame, TitleBar, Fieldset, Checkbox } from "@react95/core";
 import { Awschd32402 } from "@react95/icons";
 import { memo } from "react";
@@ -26,10 +26,10 @@ export const PlayerList = memo(({ players }: PlayerListProps) => {
   return (
     <Fieldset className={styles.set} legend="Players">
       {players.map((player) => (
-        <Label className={styles.label} key={player.id} size="medium">
+        <label className={styles.label} key={player.id}>
           {player.displayName}
           <Checkbox disabled title="ready" checked={player.ready} />
-        </Label>
+        </label>
       ))}
     </Fieldset>
   );

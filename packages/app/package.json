@@ -7,17 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
-    "@fluentui/react-card": "^9.0.0-beta.2",
-    "@fluentui/react-components": "^9.0.0-beta.1",
-    "@fluentui/react-switch": "^9.0.0-beta.1",
-    "@fortawesome/fontawesome-free": "^5.15.4",
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.15",
-    "@mui/icons-material": "^5.0.3",
-    "@mui/material": "^5.0.3",
+    "@fluentui/react-make-styles": "^9.0.0-beta.1",
     "@react95/core": "^5.5.1",
     "@react95/icons": "^2.0.4",
     "@types/styled-components": "^5.1.15",

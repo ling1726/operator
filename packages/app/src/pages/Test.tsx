@@ -1,6 +1,6 @@
 import * as React from "react";
 import { makeStyles } from "@fluentui/react-make-styles";
-import { Divider } from "@fluentui/react-components";
+import { Divider } from "@fluentui/react-make-styles";
 import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
 

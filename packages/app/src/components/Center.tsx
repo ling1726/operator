@@ -1,4 +1,4 @@
-import { makeStyles, mergeClasses } from "@fluentui/react-components";
+import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 
 const useStyles = makeStyles({
   container: {

@@ -1,13 +1,9 @@
 import * as React from "react";
-import { Card } from "@fluentui/react-components/unstable";
-import CircularProgress, {
-  circularProgressClasses,
-} from "@mui/material/CircularProgress";
-import { makeStyles, mergeClasses, Title1, Headline } from "@fluentui/react-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons"
-import { ProgressBar, Fieldset } from '@react95/core';
+import { makeStyles } from "@fluentui/react-make-styles";
 import { Awschd32402, User } from "@react95/icons";
+import { Fieldset } from '@react95/core';
+// @ts-ignore
+import { Progress } from "react95";
 
 const useStyles = makeStyles({
   root: {
@@ -27,24 +23,6 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
   },
-
-  safe: {
-    [`& .${circularProgressClasses.svg}`]: {
-      color: "green",
-    },
-  },
-
-  warning: {
-    [`& .${circularProgressClasses.svg}`]: {
-      color: "orange",
-    },
-  },
-
-  danger: {
-    [`& .${circularProgressClasses.svg}`]: {
-      color: "red",
-    },
-  },
 });
 
 const tickDuration = 100;
@@ -55,13 +33,13 @@ export function Mission(props: MissionProps) {
 
   return (
     <Fieldset>
-      <CountdownCircle duration={duration} onTimeout={onMissionTimeout} />
       <div>
-        <Title1>{name}</Title1>
-        <div className={styles.row}> <User variant="32x32_4" /> <Headline>{caller}</Headline></div>
-        <div className={styles.row}> <User variant="32x32_4" /> <Headline>{callee}</Headline></div>
-        <div className={styles.row}> <Awschd32402 variant="32x32_4" /> <Headline>{exchange}</Headline></div>
+        <h2>{name}</h2>
+        <div className={styles.row}> <User variant="32x32_4" /> <h4>{caller}</h4></div>
+        <div className={styles.row}> <User variant="32x32_4" /> <h4>{callee}</h4></div>
+        <div className={styles.row}> <Awschd32402 variant="32x32_4" /> <h4>{exchange}</h4></div>
       </div>
+      <CountdownCircle duration={duration} onTimeout={onMissionTimeout} />
     </Fieldset>
   );
 }
@@ -71,7 +49,7 @@ function CountdownCircle(props: CountDownCircleProps) {
   const [progress, setProgress] = React.useState(100);
   const progressRef = React.useRef(() => {});
   const tickProgress = React.useMemo(
-    () => Math.round((tickDuration / duration) * 100),
+    () => Math.floor((tickDuration / duration) * 100),
     [tickDuration, duration]
   );
 
@@ -102,7 +80,7 @@ function CountdownCircle(props: CountDownCircleProps) {
     return () => clearInterval(timer);
   }, []);
 
-  return <ProgressBar percent={progress} width={100} />;
+  return <Progress value={progress} hideValue />;
 }
 
 interface CountDownCircleProps {

@@ -1,7 +1,7 @@
 import { LaunchForm } from "../components/LaunchForm";
 import { Center } from "../components/Center";
 import { Redirect } from "react-router";
-import { makeStyles } from "@fluentui/react-components";
+import { makeStyles } from "@fluentui/react-make-styles";
 import { memo } from "react";
 import { useLanding } from "../hooks/useLanding";
 import { Frame, TitleBar } from "@react95/core";
@@ -26,9 +26,6 @@ const useStyles = makeStyles({
   paragraph: (theme) => ({
     textAlign: "justify",
     textJustify: "inter-word",
-    fontFamily: theme.fontFamilyMonospace,
-    fontSize: theme.fontSizeBase400,
-    fontWeight: theme.fontWeightMedium,
   }),
 });
 

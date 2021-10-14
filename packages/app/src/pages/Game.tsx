@@ -1,7 +1,5 @@
 import * as React from "react";
 import { makeStyles } from "@fluentui/react-make-styles";
-import { Divider } from "@fluentui/react-components";
-import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Displayable } from "../components/Displayable";
 import { Scorebar } from "../components/Scorebar";
 import { Mission } from "../components/Mission";
@@ -15,15 +13,8 @@ import { Center } from "../components/Center";
 
 const useStyles = makeStyles({
   grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr",
-    gridTemplateRows: "auto 1rem auto",
-    gap: "1rem 1rem",
-    gridTemplateAreas: `
-      "."
-      "."
-      "."
-    `,
+    display: "flex",
+    flexDirection: "column",
   },
   row: {
     display: "flex",
@@ -37,7 +28,7 @@ const useStyles = makeStyles({
     maxWidth: "1200px",
     display: "flex",
     flexDirection: "column",
-    margin: '0 auto',
+    margin: "0 auto",
     justifyContent: "center",
     // alignItems: "center",
   },
@@ -122,14 +113,12 @@ export function Game() {
                   id={exchange.id}
                   displayName={exchange.displayName}
                   onChange={setSelectedExchange}
-                  icon={faPhone}
                   checked={selectedExchange === exchange.id}
                 >
                   <Awschd32402 variant="32x32_4" />
                 </Displayable>
               ))}
             </div>
-            <Divider />
             <div className={styles.row}>
               {attendees.map((attendant) => (
                 <Displayable
@@ -137,14 +126,12 @@ export function Game() {
                   id={attendant.id}
                   displayName={attendant.displayName}
                   onChange={setSelectedAttendant}
-                  icon={faUser}
                   checked={selectedAttendant === attendant.id}
                 >
-                  <User variant="32x32_4" />
+                  <img src={`https://avatars.dicebear.com/api/pixel-art/${attendant.id}.svg`} />
                 </Displayable>
               ))}
             </div>
-            <Divider />
             <Scorebar score={score} />
           </div>
         </div>
