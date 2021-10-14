@@ -1,5 +1,5 @@
 import * as React from "react";
-import { makeStyles, mergeClasses, Label } from "@fluentui/react-components";
+import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 import { Button, Input } from "@react95/core";
 
 const useStyles = makeStyles({
@@ -75,9 +75,9 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={styles.root}>
       <span className={mergeClasses(styles.input, styles.server)}>
-        <Label disabled={loading} size="large" htmlFor="server-input" required>
+        <label htmlFor="server-input">
           Server
-        </Label>
+        </label>
         <Input
           disabled={loading}
           autoComplete="off"

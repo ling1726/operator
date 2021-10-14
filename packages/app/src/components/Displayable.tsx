@@ -1,7 +1,5 @@
 import * as React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-common-types";
-import { makeStyles, mergeClasses, Headline } from "@fluentui/react-components";
+import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 
 const useStyles = makeStyles({
   root: {
@@ -24,7 +22,6 @@ export interface DisplayableProps {
   id: number;
   displayName: string;
   checked: boolean;
-  icon: IconDefinition;
   onChange(id: number): void;
   children: React.ReactNode;
 }
@@ -44,7 +41,7 @@ export function Displayable(props: DisplayableProps) {
     >
 
       {props.children}
-      <Headline>{props.displayName}</Headline>
+      <h4>{props.displayName}</h4>
     </button>
   );
 }

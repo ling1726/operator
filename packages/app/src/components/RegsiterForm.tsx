@@ -1,4 +1,4 @@
-import { Label, makeStyles, mergeClasses } from "@fluentui/react-components";
+import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 import { Button, Input, Frame, TitleBar } from "@react95/core";
 import { Awschd32402 } from "@react95/icons";
 import { memo, useCallback } from "react";
@@ -58,9 +58,9 @@ export const RegisterForm = memo(
           className={mergeClasses(className, styles.form)}
         >
           <span className={styles.fieldSet}>
-            <Label size="medium" htmlFor="user-name-input" required>
+            <label htmlFor="user-name-input">
               Username
-            </Label>
+            </label>
             <Input
               autoComplete="off"
               type="text"

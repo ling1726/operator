@@ -1,14 +1,23 @@
+// @ts-ignore
 import { Progress } from "react95";
-// pick a theme of your choice
-import original from "react95/dist/themes/original";
+import { makeStyles } from '@fluentui/react-make-styles';
+
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    marginTop: 'auto',
+    marginBottom: '15px',
+  }
+})
 
 export function Scorebar(props: ScorebarProps) {
   const { score } = props;
+  const styles = useStyles();
 
   return (
-    <div>
+    <div className={styles.container}>
         {/** @ts-ignore */}
-        <Progress value={score} />
+        <Progress value={score} variant="tile" />
     </div>
   );
 }
