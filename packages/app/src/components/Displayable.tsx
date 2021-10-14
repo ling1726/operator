@@ -10,6 +10,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gap: '5px',
     alignItems: 'center',
+    justifyContent: 'center',
     cursor: "pointer",
     background: "none",
   },
@@ -41,7 +42,7 @@ export function Displayable(props: DisplayableProps) {
     >
 
       {props.children}
-      <h4>{props.displayName}</h4>
+      <h4 style={{whiteSpace: 'nowrap', margin: 0}}>{props.displayName}</h4>
     </button>
   );
 }
