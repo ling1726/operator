@@ -9,14 +9,7 @@ import { gameSelectors } from "../machines/game";
 import { useGlobalServices } from "../machines/GlobalServicesProvider";
 
 export function Lobby() {
-  const { isPlaying, isIdle, isRegistered, players, onReady, onSubmit } = {
-    isPlaying: false,
-    isIdle: false,
-    isRegistered: false,
-    players: [],
-    onReady: () => {},
-    onSubmit: () => {},
-  } as ReturnType<typeof useLobby>;
+  const { isPlaying, isIdle, isRegistered, players, onReady, onSubmit } = useLobby(); 
   if (isPlaying) return <Redirect to="/game" />;
   return (
     <Center>

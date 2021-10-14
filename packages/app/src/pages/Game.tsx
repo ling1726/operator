@@ -9,12 +9,11 @@ import { useSelector } from "@xstate/react";
 import { Redirect } from "react-router";
 import { useGlobalServices } from "../machines/GlobalServicesProvider";
 import { gameSelectors } from "../machines/game";
+import { Awschd32402, User } from "@react95/icons";
+import { Frame, TitleBar } from "@react95/core";
+import { Center } from "../components/Center";
 
 const useStyles = makeStyles({
-  main: {
-    maxWidth: "1260px",
-    margin: "0 auto",
-  },
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr",
@@ -31,6 +30,16 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     gap: "1rem",
     justifyContent: "center",
+  },
+
+  container: {
+    height: "100vh",
+    maxWidth: "1200px",
+    display: "flex",
+    flexDirection: "column",
+    margin: '0 auto',
+    justifyContent: "center",
+    // alignItems: "center",
   },
 });
 
@@ -82,9 +91,20 @@ export function Game() {
   }
 
   return (
-    <div className={styles.main}>
-      <div className={styles.grid}>
-        <div className={styles.row}>
+    <Center className={styles.container}>
+      <Frame>
+        <TitleBar
+          active
+          icon={<Awschd32402 variant="32x32_4" />}
+          title="Operator"
+          className="draggable"
+        >
+          <TitleBar.OptionsBox>
+            <TitleBar.Option>?</TitleBar.Option>
+            <TitleBar.Option>X</TitleBar.Option>
+          </TitleBar.OptionsBox>
+        </TitleBar>
+        <div style={{ display: "flex" }}>
           <Mission
             key={mission.id}
             onMissionTimeout={() => console.log("mission over")}
@@ -94,63 +114,41 @@ export function Game() {
             duration={mission.duration}
             exchange={mission.exchange}
           />
+          <div className={styles.grid}>
+            <div className={styles.row}>
+              {exchanges.map((exchange) => (
+                <Displayable
+                  key={exchange.id}
+                  id={exchange.id}
+                  displayName={exchange.displayName}
+                  onChange={setSelectedExchange}
+                  icon={faPhone}
+                  checked={selectedExchange === exchange.id}
+                >
+                  <Awschd32402 variant="32x32_4" />
+                </Displayable>
+              ))}
+            </div>
+            <Divider />
+            <div className={styles.row}>
+              {attendees.map((attendant) => (
+                <Displayable
+                  key={attendant.id}
+                  id={attendant.id}
+                  displayName={attendant.displayName}
+                  onChange={setSelectedAttendant}
+                  icon={faUser}
+                  checked={selectedAttendant === attendant.id}
+                >
+                  <User variant="32x32_4" />
+                </Displayable>
+              ))}
+            </div>
+            <Divider />
+            <Scorebar score={score} />
+          </div>
         </div>
-        <Divider />
-        <div className={styles.row}>
-          {exchanges.map((exchange) => (
-            <Displayable
-              key={exchange.id}
-              id={exchange.id}
-              displayName={exchange.displayName}
-              onChange={setSelectedExchange}
-              icon={faPhone}
-              checked={selectedExchange === exchange.id}
-            />
-          ))}
-        </div>
-        <Divider />
-        <div className={styles.row}>
-          {attendees.map((attendant) => (
-            <Displayable
-              key={attendant.id}
-              id={attendant.id}
-              displayName={attendant.displayName}
-              onChange={setSelectedAttendant}
-              icon={faUser}
-              checked={selectedAttendant === attendant.id}
-            />
-          ))}
-        </div>
-        <Divider />
-        <div className={styles.row}>
-          {exchanges.map((exchange) => (
-            <Displayable
-              key={exchange.id}
-              id={exchange.id}
-              displayName={exchange.displayName}
-              onChange={setSelectedExchange}
-              icon={faPhone}
-              checked={selectedExchange === exchange.id}
-            />
-          ))}
-        </div>
-        <Divider />
-        <div className={styles.row}>
-          {attendees.map((attendant) => (
-            <Displayable
-              key={attendant.id}
-              id={attendant.id}
-              displayName={attendant.displayName}
-              onChange={setSelectedAttendant}
-              icon={faUser}
-              checked={selectedAttendant === attendant.id}
-            />
-          ))}
-        </div>
-
-        <Divider />
-        <Scorebar score={score} />
-      </div>
-    </div>
+      </Frame>
+    </Center>
   );
 }

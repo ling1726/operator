@@ -6,6 +6,8 @@ import CircularProgress, {
 import { makeStyles, mergeClasses, Title1, Headline } from "@fluentui/react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { ProgressBar, Fieldset } from '@react95/core';
+import { Awschd32402, User } from "@react95/icons";
 
 const useStyles = makeStyles({
   root: {
@@ -52,17 +54,15 @@ export function Mission(props: MissionProps) {
   const styles = useStyles();
 
   return (
-    <Card className={mergeClasses(styles.root)}>
-      <div className={styles.title}>
-        <CountdownCircle duration={duration} onTimeout={onMissionTimeout} />
-      </div>
+    <Fieldset>
+      <CountdownCircle duration={duration} onTimeout={onMissionTimeout} />
       <div>
         <Title1>{name}</Title1>
-        <div className={styles.row}> <FontAwesomeIcon icon={faUser} /> <Headline>{caller}</Headline></div>
-        <div className={styles.row}> <FontAwesomeIcon icon={faUser} /> <Headline>{callee}</Headline></div>
-        <div className={styles.row}> <FontAwesomeIcon icon={faPhone} /> <Headline>{exchange}</Headline></div>
+        <div className={styles.row}> <User variant="32x32_4" /> <Headline>{caller}</Headline></div>
+        <div className={styles.row}> <User variant="32x32_4" /> <Headline>{callee}</Headline></div>
+        <div className={styles.row}> <Awschd32402 variant="32x32_4" /> <Headline>{exchange}</Headline></div>
       </div>
-    </Card>
+    </Fieldset>
   );
 }
 
@@ -71,7 +71,7 @@ function CountdownCircle(props: CountDownCircleProps) {
   const [progress, setProgress] = React.useState(100);
   const progressRef = React.useRef(() => {});
   const tickProgress = React.useMemo(
-    () => (tickDuration / duration) * 100,
+    () => Math.round((tickDuration / duration) * 100),
     [tickDuration, duration]
   );
 
@@ -102,18 +102,7 @@ function CountdownCircle(props: CountDownCircleProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const styles = useStyles();
-
-  let barColour = styles.safe;
-  if (progress < 60) {
-    barColour = styles.warning;
-  }
-
-  if (progress < 30) {
-    barColour = styles.danger;
-  }
-
-  return <CircularProgress style={{width: 100, height: 100}} className={mergeClasses(barColour)} variant="determinate" value={progress} />;
+  return <ProgressBar percent={progress} width={100} />;
 }
 
 interface CountDownCircleProps {

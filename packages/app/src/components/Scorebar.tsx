@@ -1,49 +1,14 @@
-import LinearProgress, { linearProgressClasses }  from "@mui/material/LinearProgress";
-import { makeStyles, mergeClasses } from "@fluentui/react-components";
-
-const useStyles = makeStyles({
-  root: {
-    [`& .${linearProgressClasses.root}`]: {
-      height: '30px',
-      borderRadius: '5px'
-    }
-  },
-
-  safe: {
-    [`& .${linearProgressClasses.bar}`]: {
-      backgroundColor: 'green',
-    }
-  },
-
-  warning: {
-    [`& .${linearProgressClasses.bar}`]: {
-      backgroundColor: 'orange',
-    }
-  },
-
-  danger: {
-    [`& .${linearProgressClasses.bar}`]: {
-      backgroundColor: 'red',
-    }
-  }
-});
+import { Progress } from "react95";
+// pick a theme of your choice
+import original from "react95/dist/themes/original";
 
 export function Scorebar(props: ScorebarProps) {
-  const styles = useStyles();
   const { score } = props;
 
-  let barColour = styles.safe;
-  if (score < 60) {
-    barColour = styles.warning;
-  }
-
-  if (score < 30) {
-    barColour = styles.danger;
-  }
-
   return (
-    <div className={mergeClasses(styles.root, barColour)}>
-      <LinearProgress variant="determinate" value={score} />
+    <div>
+        {/** @ts-ignore */}
+        <Progress value={score} />
     </div>
   );
 }

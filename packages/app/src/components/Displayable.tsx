@@ -26,6 +26,7 @@ export interface DisplayableProps {
   checked: boolean;
   icon: IconDefinition;
   onChange(id: number): void;
+  children: React.ReactNode;
 }
 
 export function Displayable(props: DisplayableProps) {
@@ -41,7 +42,8 @@ export function Displayable(props: DisplayableProps) {
       onClick={handleClick}
       className={mergeClasses(styles.root, props.checked && styles.checked)}
     >
-      <FontAwesomeIcon icon={props.icon} size="4x" />
+
+      {props.children}
       <Headline>{props.displayName}</Headline>
     </button>
   );
