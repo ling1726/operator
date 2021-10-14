@@ -6,7 +6,8 @@ const useStyles = makeStyles({
     maxWidth: "1200px",
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center",
+    margin: '0 auto',
+    justifyContent: "center",
     // alignItems: "center",
   },
 });

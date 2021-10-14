@@ -1,10 +1,10 @@
 import * as React from "react";
 import {
-  Button,
   makeStyles,
   mergeClasses,
   Label,
 } from "@fluentui/react-components";
+import { Button, Input } from '@react95/core';
 
 const useStyles = makeStyles({
   root: {
@@ -80,7 +80,7 @@ export function LaunchForm({ onSubmit, loading = false }: LaunchFormProps) {
         <Label disabled={loading} size="large" htmlFor="server-input" required>
           Server
         </Label>
-        <input
+        <Input
           disabled={loading}
           autoComplete="off"
           type="text"
