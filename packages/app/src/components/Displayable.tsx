@@ -42,7 +42,7 @@ export function Displayable(props: DisplayableProps) {
     >
 
       {props.children}
-      <h4 style={{whiteSpace: 'nowrap', margin: 0}}>{props.displayName}</h4>
+      <h4 style={{ margin: 0}}>{props.displayName}</h4>
     </button>
   );
 }

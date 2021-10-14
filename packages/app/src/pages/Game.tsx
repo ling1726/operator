@@ -1,5 +1,5 @@
 import * as React from "react";
-import { makeStyles } from "@fluentui/react-make-styles";
+import { makeStyles, mergeClasses } from "@fluentui/react-make-styles";
 import { Displayable } from "../components/Displayable";
 import { Scorebar } from "../components/Scorebar";
 import { Mission } from "../components/Mission";
@@ -18,6 +18,10 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
   },
+  rowExchanges: {
+    gap: '50px',
+  },
+
   row: {
     display: "flex",
     flexWrap: "wrap",
@@ -108,7 +112,7 @@ export function Game() {
             exchange={mission.exchange}
           />
           <div className={styles.grid}>
-            <div className={styles.row}>
+            <div className={mergeClasses(styles.row, styles.rowExchanges)}>
               {exchanges.map((exchange) => (
                 <Displayable
                   key={exchange.id}
